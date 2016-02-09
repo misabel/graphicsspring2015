@@ -125,12 +125,6 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
         return true;
     }
 
-
-
-    
-
-    
-
     return false;
 }
 
