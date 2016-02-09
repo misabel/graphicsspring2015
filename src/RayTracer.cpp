@@ -34,7 +34,7 @@ Vec3d RayTracer::trace( double x, double y )
 {
 	// Clear out the ray cache in the scene for debugging purposes,
 	if (!traceUI->isMultithreading())
-		scene->4Cache.clear();
+		scene->intersectCache.clear();
 
     ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
 

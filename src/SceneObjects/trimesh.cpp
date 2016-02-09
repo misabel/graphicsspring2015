@@ -114,16 +114,17 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
         double beta = (((a - c)^(q - c)) * n) / (((b - a)^(c - a)) * n);
         double gamma = (((b - a)^(q - a)) * n) / (((b - a)^(c - a)) * n);
 
-        Vec3d tmp = alpha * (parent->normals[ids[0]]) + beta * (parent->normals[ids[1]]) + gamma * (parent->normals[ids[2]]);
-        tmp.normalize();
-        i.setN(tmp);
+        Vec3d interpolatedNormal = alpha * (parent->normals[ids[0]]) + beta * (parent->normals[ids[1]]) + gamma * (parent->normals[ids[2]]);
+        interpolatedNormal.normalize();
+        i.setN(interpolatedNormal);
 
     }
     else {
 
         i.setN(n);
-
     }
+
+    i.setT(t);
 
     i.obj = this;
     return true; 
