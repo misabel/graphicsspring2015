@@ -67,6 +67,68 @@ Trimesh::doubleCheck()
 // Calculates and returns the normal of the triangle too.
 bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
 {
+// init
+
+    const Vec3d& a = parent->vertices[ids[0]];
+    const Vec3d& b = parent->vertices[ids[1]];
+    const Vec3d& c = parent->vertices[ids[2]]; 
+
+    Vec3d p = r.getPosition();
+    Vec3d d = r.getDirection();
+
+    Vec3d n = (b - a)^(c - a);
+    n.normalize();
+
+    // check if parallel
+    if((n * d) < RAY_EPSILON) {
+        return false;
+    }
+
+    double t = (n * a - n * p) / (n * d);
+    if(t < RAY_EPSILON) {
+        return false;
+    }
+
+    // intersect point
+    Vec3d q = r.at(t);
+
+    // inside-outside testing
+    if((((b - a)^(q - a)) * n) < 0) {
+        return false;
+    }
+
+    if((((c - b)^(q - b)) * n) < 0) {
+        return false;
+    }
+
+    if((((a - c)^(q - c)) * n) < 0) {
+        return false;
+    }
+    
+	// TrimeshFace::parent->hasPerVertexNormals tells you if the triangle has per-vertex normals.
+	// If it does, you should compute and return the interpolated normal at the intersection point.
+	// If it does not, you should return the normal of the triangle's supporting plane.
+	if(TrimeshFace::parent->hasPerVertexNormals()) {
+
+        double alpha = (((c - b)^(q - b)) * n) / (((b - a)^(c - a)) * n);
+        double beta = (((a - c)^(q - c)) * n) / (((b - a)^(c - a)) * n);
+        double gamma = (((b - a)^(q - a)) * n) / (((b - a)^(c - a)) * n);
+
+        Vec3d tmp = alpha * (parent->normals[ids[0]]) + beta * (parent->normals[ids[1]]) + gamma * (parent->normals[ids[2]]);
+        tmp.normalize();
+        i.setN(tmp);
+
+    }
+    else {
+
+        i.setN(n);
+
+    }
+
+    i.obj = this;
+    return true; 
+    
+    /*
     // YOUR CODE HERE:
     // Add triangle intersection code here.
     // it currently ignores all triangles and just return false.
@@ -125,13 +187,8 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
         return true;
     }
 
-
-
-    
-
-    
-
     return false;
+    */
 }
 
 
