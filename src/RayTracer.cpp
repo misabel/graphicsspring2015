@@ -52,6 +52,7 @@ Vec3d RayTracer::traceRay( const ray& r,
 	isect i;
 
 	if( scene->intersect( r, i ) ) {
+
 		// YOUR CODE HERE
 
 		// An intersection occured!  We've got work to do.  For now,

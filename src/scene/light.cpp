@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 
 #include "light.h"
 
@@ -39,7 +40,11 @@ double PointLight::distanceAttenuation( const Vec3d& P ) const
 	// You'll need to modify this method to attenuate the intensity 
 	// of the light based on the distance between the source and the 
 	// point P.  For now, we assume no attenuation and just return 1.0
-	return 1.0;
+
+	float distance = sqrt(P[0] * P[0] + P[1] * P[1] + P[2] * P[2]);
+
+
+	return min(1.0, (1/(constantTerm + linearTerm * distance + quadraticTerm * pow(distance, 2))));
 }
 
 Vec3d PointLight::getColor() const

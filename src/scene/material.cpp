@@ -39,8 +39,31 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	// 		.
 	// 		.
 	// }
+        Vec3d I = ke(i) + ka(i);
 
-	return kd(i);
+    for ( vector<Light*>::const_iterator litr = scene->beginLights(); 
+         litr != scene->endLights(); 
+         ++litr )
+    {
+         Light* pLight = *litr;
+
+         int phong_constant = 3;
+
+         Vec3d Q = r.at(i.t);
+         double atten = pLight->distanceAttenuation(Q);
+         Vec3d L = pLight->getDirection(Q);
+         Vec3d H = Q + L;
+
+         H.normalize();
+
+
+         I += atten * (kd(i) * (i.N * L) + ks(i) * pow(i.N * H, phong_constant));
+
+
+
+    }
+    return I;
+	//return kd(i);
 }
 
 

@@ -48,8 +48,6 @@ bool Sphere::intersectLocal( const ray& r, isect& i ) const
 			i.setT(t1);
 		else
 			i.setT(t2);
-
-		cout << "THERES A SPHERE HERE" << endl;
 		return true;
 
 
