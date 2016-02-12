@@ -39,7 +39,7 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	// 		.
 	// 		.
 	// }
-        Vec3d I = ke(i) + ka(i);
+        Vec3d I = ke(i) + ka(i); // this is where you would add ambient lighting Ila
 
     for ( vector<Light*>::const_iterator litr = scene->beginLights(); 
          litr != scene->endLights(); 
@@ -50,7 +50,7 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
          int phong_constant = 3;
 
          Vec3d Q = r.at(i.t);
-         double atten = pLight->distanceAttenuation(Q);
+         double atten = pLight->distanceAttenuation(Q); // this is where you would add shadow attentuation
          Vec3d L = pLight->getDirection(Q);
          Vec3d H = Q + L;
 
@@ -63,7 +63,6 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
     }
     return I;
-	//return kd(i);
 }
 
 
