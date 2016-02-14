@@ -50,7 +50,8 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
          int phong_constant = 3;
 
          Vec3d Q = r.at(i.t);
-         double atten = pLight->distanceAttenuation(Q); // this is where you would add shadow attentuation
+         
+         double atten = pLight->distanceAttenuation(Q) * pLight->shadowAttenuation(Q).length(); // this is where you would add shadow attentuation
          Vec3d L = pLight->getDirection(Q);
          Vec3d H = Q + L;
 
