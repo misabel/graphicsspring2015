@@ -21,7 +21,27 @@ Vec3d DirectionalLight::shadowAttenuation( const Vec3d& P ) const
     // You should implement shadow-handling code here.
 	// HINT: You can access the Scene using the getScene function inherited by Light object.
 
-    return Vec3d(1,1,1);
+    // init
+    Vec3d d = getDirection(P);
+    Scene* scene = getScene();
+    Vec3d atten = Vec3d(1,1,1);
+    isect i;
+    ray r = ray(P, d, r.SHADOW);
+
+    while(scene->intersect(r,i) && i.t > RAY_EPSILON) {
+
+		Material m = i.getMaterial();
+		atten = prod(atten, m.kt(i));
+
+		if (clamp(atten).iszero()) {
+			break;
+		}
+
+		r = ray(r.at(i.t), d, r.SHADOW);
+	}
+
+	return atten;
+
 }
 
 Vec3d DirectionalLight::getColor() const
@@ -40,10 +60,9 @@ double PointLight::distanceAttenuation( const Vec3d& P ) const
 	// of the light based on the distance between the source and the 
 	// point P.  For now, we assume no attenuation and just return 1.0
 
-	float distance = sqrt(P[0] * P[0] + P[1] * P[1] + P[2] * P[2]);
-
-
-	return min(1.0, (1/(constantTerm + linearTerm * distance + quadraticTerm * pow(distance, 2))));
+	Vec3d distance = this->position - P;
+	
+	return min(1.0, 1/(constantTerm + linearTerm * distance.length() + quadraticTerm * pow(distance.length(), 2)));
 }
 
 Vec3d PointLight::getColor() const
@@ -79,8 +98,6 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 	ray r = ray(P, d, ray::VISIBILITY);
 	ray r_light = ray(position, d_light, ray::SHADOW);
 
-
-
 	scene->intersect( r, i );
 	scene->intersect(r_light, i_light);
 
@@ -90,6 +107,6 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 	else
 		atten = Vec3d(1,1,1);
 
+    return atten; 
 
-    return atten;
 }

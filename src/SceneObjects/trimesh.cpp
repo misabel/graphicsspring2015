@@ -67,8 +67,7 @@ Trimesh::doubleCheck()
 // Calculates and returns the normal of the triangle too.
 bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
 {
-// init
-
+    // init
     const Vec3d& a = parent->vertices[ids[0]];
     const Vec3d& b = parent->vertices[ids[1]];
     const Vec3d& c = parent->vertices[ids[2]]; 
@@ -80,7 +79,7 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
     n.normalize();
 
     // check if parallel
-    if((n * d) < RAY_EPSILON) {
+    if(-(n * d) < RAY_EPSILON) {
         return false;
     }
 
@@ -125,71 +124,10 @@ bool TrimeshFace::intersectLocal( const ray& r, isect& i ) const
     }
 
     i.setT(t);
+    i.obj = this;   
 
-    i.obj = this;
     return true; 
-    
-    /*
-    // YOUR CODE HERE:
-    // Add triangle intersection code here.
-    // it currently ignores all triangles and just return false.
-    //
-    // Note that you are only intersecting a single triangle, and the vertices
-    // of the triangle are supplied to you by the trimesh class.
-    //
-    // You should retrieve the vertices using code like this:
-    //
-    // const Vec3d& a = parent->vertices[ids[0]];
-    // const Vec3d& b = parent->vertices[ids[1]];
-    // const Vec3d& c = parent->vertices[ids[2]];
-	//
-	// TrimeshFace::parent->hasPerVertexNormals tells you if the triangle has per-vertex normals.
-	// If it does, you should compute and return the interpolated normal at the intersection point.
-	// If it does not, you should return the normal of the triangle's supporting plane.
-	// 
 
-    i.obj = this;
-
-    Vec3d p = r.getPosition();
-    Vec3d d = r.getDirection();
-    const Vec3d& a = parent->vertices[ids[0]];
-    const Vec3d& b = parent->vertices[ids[1]];
-    const Vec3d& c = parent->vertices[ids[2]];
-
-    Vec3d n = (b - a) ^ (c - a);
-    double magnitude = sqrt( n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
-
-    n = n / magnitude;
-
-    if(n * d == 0)
-        return false;
-
-    Vec3d dp = n * a;
-
-    double t = (dp - n * p) / (n * d);
-
-    Vec3d q = r.at(t);
-
-    if( (((b - a) ^ (q - a)) * n) >= 0 &&
-        (((c - b) ^ (q - b)) * n) >= 0 &&
-        (((a - c) ^ (q - c)) * n) >= 0){
-
-        
-
-        if(parent->hasPerVertexNormals()){
-            //TODO
-        }
-
-        else {
-            i.setT(t);
-            i.setN(t);
-        }
-
-        return true;
-    }
-
-    return false;
-    */
 }
 
 
