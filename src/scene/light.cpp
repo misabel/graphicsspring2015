@@ -77,7 +77,7 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 	isect i, i_light;
 
 	ray r = ray(P, d, ray::VISIBILITY);
-	ray r_light = ray(position, d_light, ray::VISIBILITY);
+	ray r_light = ray(position, d_light, ray::SHADOW);
 
 
 
