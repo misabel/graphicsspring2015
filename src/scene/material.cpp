@@ -57,10 +57,7 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 
          H.normalize();
 
-
          I += atten * (kd(i) * (i.N * L) + ks(i) * pow(i.N * H, phong_constant));
-
-
 
     }
     return I;

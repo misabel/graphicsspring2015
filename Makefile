@@ -3,7 +3,7 @@
 #
 
 # set local paths
-FLTK =
+FLTK = 
 
 INCLUDE = -I$(FLTK) -I$(FLTK)/png -I$(FLTK)/jpeg
 LIBDIR = -L$(FLTK)/lib
