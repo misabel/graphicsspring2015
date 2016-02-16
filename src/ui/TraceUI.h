@@ -16,7 +16,7 @@
 
 #include <string>
 
-#define MULTITHREADED
+#define MULTITHREADED true
 
 using std::string;
 

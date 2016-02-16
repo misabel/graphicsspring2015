@@ -7,6 +7,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdarg.h>
+#include <iostream>
 
 #ifndef COMMAND_LINE_ONLY
 
@@ -17,8 +18,10 @@
 #include "../RayTracer.h"
 #include "dialog.h"
 
+
 #pragma warning (disable: 4996)
 
+using namespace std;
 
 bool GraphicalUI::stopTrace = false;
 bool GraphicalUI::doneTrace = true;
@@ -211,6 +214,7 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v)
 		const char *old_label = pUI->m_traceGlWindow->label();
 
 		pUI->m_traceGlWindow->refresh();
+
 		
 //there is a collision with assert macros		
 #ifdef check
@@ -224,6 +228,7 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v)
 #ifdef MULTITHREADED
 		pUI->nextX = 0;
 		pUI->nextY = 0;
+
 		
 		pUI->setMultithreading(true);
 		ThreadPool* tp = new ThreadPool();
@@ -272,7 +277,6 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v)
 			
 		}
 
-		cout << "done tracing!!" << endl;
 #endif
 		doneTrace=true;
 		stopTrace=false;

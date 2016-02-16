@@ -7,6 +7,7 @@
 
 #define THREAD_CHUNKSIZE 32
 
+
 class Scene;
 
 class RayTracer
@@ -32,6 +33,8 @@ public:
       { m_bBufferReady = ready; }
     bool isReady() const
       { return m_bBufferReady; }
+
+    // static void start(ThreadPool* threads, void* arg);
 
 	const Scene& getScene() { return *scene; }
 

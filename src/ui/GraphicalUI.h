@@ -20,6 +20,7 @@
 #include "TraceUI.h"
 #include "TraceGLWindow.h"
 #include "debuggingWindow.h"
+// #include "../fileio/CImg.h"
 
 #ifdef MULTITHREADED
 #include "../threads/ThreadPool.h"

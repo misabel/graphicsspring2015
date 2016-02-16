@@ -21,6 +21,8 @@ public:
 	int		run();
 
 	void		alert( const string& msg );
+	int nextX, nextY;
+
 
 private:
 	void		usage();

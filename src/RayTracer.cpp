@@ -36,36 +36,15 @@ Vec3d RayTracer::trace( double x, double y )
 
 	// Clear out the ray cache in the scene for debugging purposes,
 	Vec3d ret;
-	// if(anti_aliasing){
-	// 	ret = Vec3d(0,0,0);
-	// 	int sample_rate = 50;
+
 		if (!traceUI->isMultithreading())
 			scene->intersectCache.clear();
 
-
-	// 	for(int p = 0; p < sample_rate; p++){
-	// 		for(int q = 0; q < sample_rate; q++){
-	// 			// color += trace(i + (p + 0.5)/sample_rate, j + (q + 0.5)/sample_rate);
-
-	// 			double xx = (x + (p) / sample_rate);
-	// 			double yy = (y + (q)/ sample_rate);
-	// 			ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
-	// 			scene->getCamera().rayThrough(xx, yy, r);
-	// 			ret += traceRay(r, Vec3d(1.0, 1.0, 1.0), 0);
-
-	// 		}
-	// 	}
-
-
-	// 	ret = ret/(sample_rate * sample_rate);
-	// }
-	// else {
 		ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
 
     	scene->getCamera().rayThrough( x,y,r );
 		ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
 		ret.clamp();
-	// }
     
 	// cout << ret << endl;
 	return ret;
@@ -203,24 +182,22 @@ void RayTracer::tracePixel( int i, int j )
 	
 
 	if(anti_aliasing){
-		col = Vec3d(0,0,0);
+
+		col= Vec3d(0,0,0);
 		int sample_rate = 10;
-		// if (!traceUI->isMultithreading())
-		// 	scene->intersectCache.clear();
 
 		for(int p = 0; p < sample_rate; p++){
 			for(int q = 0; q < sample_rate; q++){
-				// color += trace(i + (p + 0.5)/sample_rate, j + (q + 0.5)/sample_rate);
-				double x = double(i + (p + 0.5) / sample_rate)/double(buffer_width);
-				double y = double(j + (q + 0.5)/ sample_rate)/double(buffer_height);
+		
+				double x = double(i + (p + (double)rand()/RAND_MAX) / sample_rate)/double(buffer_width);
+				double y = double(j + (q + (double)rand()/RAND_MAX)/ sample_rate)/double(buffer_height);
 
 				col += trace(x,y);
 			}
 		}
-
-
 		col = col/(sample_rate * sample_rate);
 	}
+
 
 	else{
 		double x = double(i)/double(buffer_width);
@@ -236,4 +213,5 @@ void RayTracer::tracePixel( int i, int j )
 	pixel[1] = (int)( 255.0 * col[1]);
 	pixel[2] = (int)( 255.0 * col[2]);
 }
+
 
