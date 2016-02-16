@@ -204,7 +204,7 @@ void RayTracer::tracePixel( int i, int j )
 	if(anti_aliasing){
 
 		col= Vec3d(0,0,0);
-		int sample_rate = 10;
+		int sample_rate = 5;
 
 		for(int p = 0; p < sample_rate; p++){
 			for(int q = 0; q < sample_rate; q++){
