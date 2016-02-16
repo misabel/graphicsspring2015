@@ -1,7 +1,7 @@
 #include "ray.h"
 #include "material.h"
 #include "light.h"
-
+#include <iostream>
 #include "../fileio/imageio.h"
 
 using namespace std;
@@ -39,7 +39,7 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
 	// 		.
 	// 		.
 	// }
-        Vec3d I = ke(i) + ka(i); // this is where you would add ambient lighting Ila
+        Vec3d I = ke(i) + ka(i) * scene->ambient().length(); // this is where you would add ambient lighting Ila
 
     for ( vector<Light*>::const_iterator litr = scene->beginLights(); 
          litr != scene->endLights(); 
@@ -47,17 +47,22 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
     {
          Light* pLight = *litr;
 
-         int phong_constant = 3;
+         int phong_constant = 2;
 
          Vec3d Q = r.at(i.t);
+         //Q.normalize();
          
          double atten = pLight->distanceAttenuation(Q) * pLight->shadowAttenuation(Q).length(); // this is where you would add shadow attentuation
          Vec3d L = pLight->getDirection(Q);
          Vec3d H = Q + L;
 
          H.normalize();
+         Vec3d diffuse_term = kd(i) * max(0.0,i.N * L);
+         Vec3d specular_term = ks(i) * pow( max(0.0,i.N * H), phong_constant);
 
-         I += atten * (kd(i) * (i.N * L) + ks(i) * pow(i.N * H, phong_constant));
+         
+
+         I += atten * (diffuse_term + specular_term);
 
     }
     return I;

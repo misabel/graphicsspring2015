@@ -37,7 +37,7 @@ Vec3d DirectionalLight::shadowAttenuation( const Vec3d& P ) const
 			break;
 		}
 
-		r = ray(r.at(i.t), d, r.SHADOW);
+		r = ray(r.at(i.t), d, ray::SHADOW);
 	}
 
 	return atten;
@@ -60,9 +60,9 @@ double PointLight::distanceAttenuation( const Vec3d& P ) const
 	// of the light based on the distance between the source and the 
 	// point P.  For now, we assume no attenuation and just return 1.0
 
-	Vec3d distance = this->position - P;
+
 	
-	return min(1.0, 1/(constantTerm + linearTerm * distance.length() + quadraticTerm * pow(distance.length(), 2)));
+	return min(1.0, 1/(constantTerm + linearTerm * P.length() + quadraticTerm * pow(P.length(), 2)));
 }
 
 Vec3d PointLight::getColor() const
@@ -74,7 +74,7 @@ Vec3d PointLight::getDirection( const Vec3d& P ) const
 {
 	Vec3d ret = position - P;
 
-	if(ret!=Vec3d(0,0,0))
+	if(ret.length()!=0)
 		ret.normalize();
 	return ret;
 }
@@ -88,7 +88,7 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 	Vec3d d = getDirection(P);
 	Vec3d d_light = P - position;
 	if(d_light!=Vec3d(0,0,0))
-	d_light.normalize();
+		d_light.normalize();
 
 	Scene* scene = getScene();
 	Vec3d atten;
@@ -100,6 +100,8 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 
 	scene->intersect( r, i );
 	scene->intersect(r_light, i_light);
+
+
 
 	if(i.t < i_light.t){
 		atten = Vec3d(0,0,0);

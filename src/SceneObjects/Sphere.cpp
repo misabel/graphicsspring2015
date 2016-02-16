@@ -31,7 +31,9 @@ bool Sphere::intersectLocal( const ray& r, isect& i ) const
 
 	if( discriminant >= 0 ) {
 
-		i.setN(2*(p - c));
+		Vec3d N = 2*(p-c);
+		N.normalize();
+		i.setN(N);
 
 		discriminant = sqrt(discriminant);
 
