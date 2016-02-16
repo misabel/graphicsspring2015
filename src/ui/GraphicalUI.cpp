@@ -271,6 +271,8 @@ void GraphicalUI::cb_render(Fl_Widget* o, void* v)
 			pUI->m_traceGlWindow->label(buffer);
 			
 		}
+
+		cout << "done tracing!!" << endl;
 #endif
 		doneTrace=true;
 		stopTrace=false;

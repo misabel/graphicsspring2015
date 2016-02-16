@@ -25,6 +25,7 @@ using namespace std;
 // debugging messages.  Gets set in the "trace single ray" mode
 // in TraceGLWindow, for example.
 bool debugMode = false;
+bool anti_aliasing = true;
 
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
@@ -32,15 +33,41 @@ bool debugMode = false;
 // in an initial ray weight of (0.0,0.0,0.0) and an initial recursion depth of 0.
 Vec3d RayTracer::trace( double x, double y )
 {
+
 	// Clear out the ray cache in the scene for debugging purposes,
-	if (!traceUI->isMultithreading())
-		scene->intersectCache.clear();
+	Vec3d ret;
+	// if(anti_aliasing){
+	// 	ret = Vec3d(0,0,0);
+	// 	int sample_rate = 50;
+		if (!traceUI->isMultithreading())
+			scene->intersectCache.clear();
 
-    ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
 
-    scene->getCamera().rayThrough( x,y,r );
-	Vec3d ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
-	ret.clamp();
+	// 	for(int p = 0; p < sample_rate; p++){
+	// 		for(int q = 0; q < sample_rate; q++){
+	// 			// color += trace(i + (p + 0.5)/sample_rate, j + (q + 0.5)/sample_rate);
+
+	// 			double xx = (x + (p) / sample_rate);
+	// 			double yy = (y + (q)/ sample_rate);
+	// 			ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
+	// 			scene->getCamera().rayThrough(xx, yy, r);
+	// 			ret += traceRay(r, Vec3d(1.0, 1.0, 1.0), 0);
+
+	// 		}
+	// 	}
+
+
+	// 	ret = ret/(sample_rate * sample_rate);
+	// }
+	// else {
+		ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
+
+    	scene->getCamera().rayThrough( x,y,r );
+		ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
+		ret.clamp();
+	// }
+    
+	// cout << ret << endl;
 	return ret;
 }
 
@@ -173,10 +200,35 @@ void RayTracer::tracePixel( int i, int j )
 	if( ! sceneLoaded() )
 		return;
 
-	double x = double(i)/double(buffer_width);
-	double y = double(j)/double(buffer_height);
+	
 
-	col = trace( x, y);
+	if(anti_aliasing){
+		col = Vec3d(0,0,0);
+		int sample_rate = 10;
+		// if (!traceUI->isMultithreading())
+		// 	scene->intersectCache.clear();
+
+		for(int p = 0; p < sample_rate; p++){
+			for(int q = 0; q < sample_rate; q++){
+				// color += trace(i + (p + 0.5)/sample_rate, j + (q + 0.5)/sample_rate);
+				double x = double(i + (p + 0.5) / sample_rate)/double(buffer_width);
+				double y = double(j + (q + 0.5)/ sample_rate)/double(buffer_height);
+
+				col += trace(x,y);
+			}
+		}
+
+
+		col = col/(sample_rate * sample_rate);
+	}
+
+	else{
+		double x = double(i)/double(buffer_width);
+		double y = double(j)/double(buffer_height);
+		col = trace( x, y);
+	}
+
+	
 
 	unsigned char *pixel = buffer + ( i + j * buffer_width ) * 3;
 

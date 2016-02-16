@@ -46,8 +46,10 @@ bool Sphere::intersectLocal( const ray& r, isect& i ) const
 		double distance1 = sqrt( pow( px - p1[0] ,2) + pow(py - p1[1], 2) + pow(pz - p1[2], 2));
 		double distance2 = sqrt( pow( px - p2[0] ,2) + pow(py - p2[1], 2) + pow(pz - p2[2], 2));
 
-		if(distance1 < distance2)
+		if(distance1 < distance2){
+
 			i.setT(t1);
+		}
 		else
 			i.setT(t2);
 		return true;

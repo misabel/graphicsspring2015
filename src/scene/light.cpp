@@ -86,28 +86,30 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 	// HINT: You can access the Scene using the getScene function inherited by Light object.
 
 	Vec3d d = getDirection(P);
-	Vec3d d_light = P - position;
-	if(d_light!=Vec3d(0,0,0))
-		d_light.normalize();
+	// Vec3d d_light = P - position;
+	// if(d_light!=Vec3d(0,0,0))
+	// 	d_light.normalize();
 
 	Scene* scene = getScene();
 	Vec3d atten;
 
-	isect i, i_light;
+	isect i;
 
 	ray r = ray(P, d, ray::VISIBILITY);
-	ray r_light = ray(position, d_light, ray::SHADOW);
+	// ray r_light = ray(position, d_light, ray::SHADOW);
 
-	scene->intersect( r, i );
-	scene->intersect(r_light, i_light);
+	// scene->intersect( r, i );
+	// scene->intersect(r_light, i_light);
 
 
 
-	if(i.t < i_light.t){
+	if(scene->intersect( r, i ) && i.t > RAY_EPSILON){
 		atten = Vec3d(0,0,0);
 	}
-	else
+	else{
+		i.setT(RAY_EPSILON);
 		atten = Vec3d(1,1,1);
+	}
 
     return atten; 
 
