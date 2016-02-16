@@ -81,7 +81,8 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
             Light* pLight = *litr;  
 
             Vec3d L = pLight->getDirection(Q);
-            Vec3d H = Q + L;
+            //Vec3d H = Q + L;
+            Vec3d H = (L + (-1) * r.getDirection());
             H.normalize();
 
             // add diffuse and specular
