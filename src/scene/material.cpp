@@ -11,7 +11,7 @@ extern bool debugMode;
 // Apply the Blinn-Phong model to this point on the surface of the object, 
 //  returning the color of that point.
 Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
-{
+{/*
 	// YOUR CODE HERE
 
 	// For now, this method just returns the diffuse color of the object.
@@ -65,7 +65,37 @@ Vec3d Material::shade( Scene *scene, const ray& r, const isect& i ) const
          I += atten * (diffuse_term + specular_term);
 
     }
-    return I;
+    return I;*/
+
+        if( debugMode )
+            std::cout << "Debugging the Phong code (or lack thereof...)" << std::endl;
+
+        // iterate one: simple and ambient
+        Vec3d light = ke(i) + prod(scene->ambient(),ka(i));
+        Vec3d Q = r.at(i.t);
+        
+        for ( vector<Light*>::const_iterator litr = scene->beginLights(); 
+            litr != scene->endLights(); 
+            ++litr )
+        {
+            Light* pLight = *litr;  
+
+            Vec3d L = pLight->getDirection(Q);
+            Vec3d H = Q + L;
+            H.normalize();
+
+            // add diffuse and specular
+            Vec3d dLight = kd(i) * max(0.0, i.N * L); // diffuse
+            Vec3d sLight = ks(i) * pow(max(0.0, i.N * H), shininess(i)); // specular
+            Vec3d newL = dLight + sLight;
+            newL = prod(newL, pLight->getColor());
+
+            // handle multiple lights
+            light += prod(pLight->shadowAttenuation(Q), newL) * pLight->distanceAttenuation(Q);
+        }
+        
+    
+    return light;
 }
 
 
