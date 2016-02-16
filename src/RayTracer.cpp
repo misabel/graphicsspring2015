@@ -43,43 +43,63 @@ Vec3d RayTracer::trace( double x, double y )
 		ray r( Vec3d(0,0,0), Vec3d(0,0,0), ray::VISIBILITY );
 
     	scene->getCamera().rayThrough( x,y,r );
-		ret = traceRay( r, Vec3d(1.0,1.0,1.0), 0 );
+		ret = traceRay( r, Vec3d(1.0,1.0,1.0), traceUI->getDepth() );
 		ret.clamp();
-    
-	// cout << ret << endl;
+ 
 	return ret;
 }
 
-// Do recursive ray tracing!  You'll want to insert a lot of code here
-// (or places called from here) to handle reflection, refraction, etc etc.
-Vec3d RayTracer::traceRay( const ray& r, 
-	const Vec3d& thresh, int depth )
+Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
 {
-	isect i;
+    isect i;
 
-	if( scene->intersect( r, i ) ) {
+    if( scene->intersect( r, i ) ) {
 
-		// YOUR CODE HERE
+        /* Return the sum of these three color intensities:
+         * - Direct Component
+         * - Reflective Component
+         * - Refractive Component */
 
-		// An intersection occured!  We've got work to do.  For now,
-		// this code gets the material for the surface that was intersected,
-		// and asks that material to provide a color for the ray.  
+        /* 1. Determine the direct color with the pong illumination model
+         *
+         * Gets the material for the surface that was intersected,
+         * and asks that material to provide a color for the ray. */
+        const Material& m = i.getMaterial();
+        Vec3d color = m.shade(scene, r, i);
 
-		// This is a great place to insert code for recursive ray tracing.
-		// Instead of just returning the result of shade(), add some
-		// more steps: add in the contributions from reflected and refracted
-		// rays.
+        // Recursion based on depth
+        if (depth > 0) {
 
-		const Material& m = i.getMaterial();
-		return m.shade(scene, r, i);
-	
-	} else {
-		// No intersection.  This ray travels to infinity, so we color
-		// it according to the background color, which in this (simple) case
-		// is just black.
+            /* 2. Determine the reflected color component
+             *
+             * Calculate the reflection vector, then make a
+             * recursive call to the traceRay function */
+            ray reflectedRay = getReflectedRay(i, r);
 
-		return Vec3d( 0.0, 0.0, 0.0 );
-	}
+            // Reflective property
+            Vec3d v1 = m.kr(i);
+
+            // Recursive call to get reflection vector
+            Vec3d v2 = traceRay(reflectedRay, Vec3d(1.0, 1.0, 1.0), depth - 1);
+
+            //Vec3d reflectedColor = m.kr(i) * traceRay(reflectedRay, Vec3d(1.0,1.0,1.0), (depth - 1));
+            Vec3d reflectedColor = prod(v1,v2);
+
+            color = color + reflectedColor;
+
+            /* 3. Determine the refracted color component
+             * (recursive call to the traceRay function,
+             * test and handle for total internal refraction) */
+        }
+        return color;
+
+    } else {
+        // No intersection.  This ray travels to infinity, so we color
+        // it according to the background color, which in this (simple) case
+        // is just black.
+
+        return Vec3d( 0.0, 0.0, 0.0 );
+    }
 }
 
 RayTracer::RayTracer()
@@ -214,4 +234,20 @@ void RayTracer::tracePixel( int i, int j )
 	pixel[2] = (int)( 255.0 * col[2]);
 }
 
+ray RayTracer::getReflectedRay( isect i, ray r )
+{
+    /* A ray has a position where the ray starts,
+     * and a direction (which should be normalized) */
+
+    // REFLECTION POSITION
+    // Reflection ray starts where intersection occurs
+    Vec3d Q = r.at(i.t);
+
+    // REFLECTION DIRECTION
+    // R = d + 2 (-d * N) N
+    Vec3d R = r.getDirection() + 2 * (-r.getDirection() * i.N) * i.N;
+    R.normalize();
+
+    return ray ( Q, R, ray::REFLECTION );
+}
 
