@@ -262,7 +262,7 @@ public:
 
 	void normalize() { 
 		double len = length();
-		assert(len != 0);
+		if(len==0) return;
 		n[0] /= len; n[1] /= len;
 	}
 
@@ -360,7 +360,8 @@ public:
 
 	void normalize() { 
 		double len = length();
-		assert(len != 0);
+		if(len == 0)
+			return;
 		n[0] /= len; n[1] /= len; n[2] /= len;
 	}
 
@@ -502,7 +503,8 @@ public:
 
 	void normalize() {
 		double len = length();
-		assert(len != 0);
+		if(len == 0)
+			return;
 		n[0] /= len; n[1] /= len; n[2] /= len; n[3] /= len;
 	}
 	
@@ -700,7 +702,8 @@ double Vec<T>::length() const {
 template <class T>
 void Vec<T>::normalize() {
 	double len = length();
-	assert(len != 0);
+	if(len == 0)
+		return;
 
 	for( int i=0;i<numElements;i++ )
 		n[i] /= len;
