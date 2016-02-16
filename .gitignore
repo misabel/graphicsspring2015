@@ -1,7 +1,7 @@
 .DS_Store
 
 Makefile
-
+trace
 
 # Compiled Object files
 *.slo
