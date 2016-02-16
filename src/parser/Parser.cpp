@@ -60,6 +60,9 @@ Scene* Parser::parseScene()
       case DIRECTIONAL_LIGHT:
          scene->add( parseDirectionalLight( scene ) );
          break;
+      case SPOT_LIGHT:
+         scene->add( parseSpotLight( scene ) );
+         break;
       case AMBIENT_LIGHT:
          parseAmbientLight( scene );
          break;
@@ -876,6 +879,82 @@ DirectionalLight* Parser::parseDirectionalLight( Scene* scene )
      }
   }
 }
+
+SpotLight* Parser::parseSpotLight( Scene* scene )
+{
+  Vec3d direction;
+  Vec3d color;
+  double angle; // angle btw L and S
+  double falloff; // angular falloff coefficient
+  Vec3d position;
+
+  bool hasDirection( false ), hasColor( false ), hasAngle( false );
+  bool hasPosition( false ), hasFallOff( false );
+
+  _tokenizer.Read( SPOT_LIGHT );
+  _tokenizer.Read( LBRACE );
+
+  for( ;; )
+  {
+     const Token* t = _tokenizer.Peek();
+     switch( t->kind() )
+     {
+       case DIRECTION:
+         if( hasDirection )
+           throw SyntaxErrorException( "Repeated 'spot' attribute", _tokenizer );
+         direction = parseVec3dExpression();
+         hasDirection = true;
+         break;
+
+       case COLOR:
+         if( hasColor )
+            throw SyntaxErrorException( "Repeated 'color' attribute", _tokenizer );
+         color = parseVec3dExpression();
+         hasColor = true;
+         break;
+
+      case POSITION:
+         if( hasPosition )
+           throw SyntaxErrorException( "Repeated 'position' attribute", _tokenizer );
+         position = parseVec3dExpression();
+         hasPosition = true;
+         break;
+
+      case ANGLE:
+         if( hasAngle )
+           throw SyntaxErrorException( "Repeated 'angle' attribute", _tokenizer );
+         angle = parseScalarExpression();
+         hasAngle = true;
+         break;
+
+      case FALL_OFF:
+         if( hasFallOff )
+           throw SyntaxErrorException( "Repeated 'falloff' attribute", _tokenizer );
+         falloff = parseScalarExpression();
+         hasFallOff = true;
+         break;
+
+        case RBRACE:
+          if( !hasColor )
+            throw SyntaxErrorException( "Expected: 'color'", _tokenizer );
+          if( !hasDirection )
+            throw SyntaxErrorException( "Expected: 'direction'", _tokenizer );
+          if( !hasPosition )
+            throw SyntaxErrorException( "Expected: 'position'", _tokenizer );
+          if( !hasAngle )
+            throw SyntaxErrorException( "Expected: 'angle'", _tokenizer );
+          if( !hasFallOff )
+            throw SyntaxErrorException( "Expected: 'fall_off'", _tokenizer );
+          _tokenizer.Read( RBRACE );
+          return new SpotLight( scene, direction, color, angle, position, falloff );
+
+        default:
+          throw SyntaxErrorException( "expecting 'position' or 'color' attribute", 
+            _tokenizer );
+     }
+  }
+}
+
 
 // These ought to be done with template member functions, but compiler support for
 // these is rather iffy...

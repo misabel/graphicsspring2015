@@ -112,3 +112,53 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
     return atten; 
 
 }
+
+double SpotLight::distanceAttenuation( const Vec3d& P ) const
+{
+	// distance to light is infinite, so f(di) goes to 0.  Return 1.
+	return 1.0;
+}
+
+
+Vec3d SpotLight::shadowAttenuation( const Vec3d& P ) const
+{
+    // YOUR CODE HERE:
+    // You should implement shadow-handling code here.
+	// HINT: You can access the Scene using the getScene function inherited by Light object.
+
+    // init
+    Vec3d d = getDirection(P);
+    Scene* scene = getScene();
+    Vec3d atten = Vec3d(1,1,1);
+    isect i;
+    ray r = ray(P, d, r.SHADOW);
+
+    while(scene->intersect(r,i) && i.t > RAY_EPSILON) {
+
+		Material m = i.getMaterial();
+		atten = prod(atten, m.kt(i));
+
+		if (clamp(atten).iszero()) {
+			break;
+		}
+
+		r = ray(r.at(i.t), d, r.SHADOW);
+	}
+
+	return atten;
+
+}
+
+Vec3d SpotLight::getColor() const
+{
+	return color;
+}
+
+Vec3d SpotLight::getDirection( const Vec3d& P ) const
+{
+	Vec3d ret = position - P;
+
+	if(ret!=Vec3d(0,0,0))
+		ret.normalize();
+	return ret;
+}

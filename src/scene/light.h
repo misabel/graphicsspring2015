@@ -48,6 +48,30 @@ public:
 	void glDraw() const;
 };
 
+class SpotLight
+	: public Light
+{
+public:
+	SpotLight(Scene *scene, const Vec3d& orien, const Vec3d& color, 
+		const double angle, const Vec3d& position, const double falloff)
+		: Light(scene, color), orientation(orien), angle(angle), position(position), falloff(falloff) 
+		{ orientation.normalize(); }
+	virtual Vec3d shadowAttenuation(const Vec3d& P) const;
+	virtual double distanceAttenuation( const Vec3d& P ) const;
+	virtual Vec3d getColor() const;
+	virtual Vec3d getDirection( const Vec3d& P ) const;
+
+protected:
+	Vec3d 		orientation;
+	Vec3d		position;
+	double		angle;
+	double		falloff;
+
+public:
+	void glDraw(GLenum lightID) const;
+	void glDraw() const;
+};
+
 class PointLight
 	: public Light
 {
