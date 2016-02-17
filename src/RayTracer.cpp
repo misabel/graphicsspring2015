@@ -106,12 +106,12 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
                 ray transmittedRay = getTransmittedRay(n_i, n_t, i, r);
 
                 // Transmissive property
-                Vec3d v3 = m.kt(i);
+                //Vec3d v3 = m.kt(i);
 
                 // Recursive call to get refracted vector
-                Vec3d v4 = traceRay(transmittedRay, Vec3d(1.0, 1.0, 1.0), depth - 1);
+                //Vec3d v4 = traceRay(transmittedRay, Vec3d(1.0, 1.0, 1.0), depth - 1);
 
-                Vec3d refractedColor = prod(v3,v4);
+                Vec3d refractedColor = prod(m.kt(i),traceRay(transmittedRay, Vec3d(1.0, 1.0, 1.0), depth - 1));
 
                 color = color + refractedColor;
             }
@@ -277,13 +277,13 @@ ray RayTracer::getReflectedRay( isect i, ray r )
 }
 
 bool RayTracer::isRayEnteringObject( isect i, ray r ) {
-	return (r.getDirection() * i.N) < 0;
+	return (- r.getDirection() * i.N) > 0;
 }
 
 bool RayTracer::isTotalInternalReflection( double n_i, double n_t, isect i, ray r ) {
     double n = n_i / n_t;
-    double cos_theta_i = - i.N * r.getDirection();
-    return (1 - pow(n,2) * (1 - pow(cos_theta_i, 2))) < 0;
+    double cos_theta_i = - (i.N * r.getDirection());
+    return (1.0 - (n * n) * (1.0 - (cos_theta_i * cos_theta_i))) < 0.0;
 }
 
 ray RayTracer::getTransmittedRay( double n_i, double n_t, isect i, ray r ) {
@@ -299,10 +299,11 @@ ray RayTracer::getTransmittedRay( double n_i, double n_t, isect i, ray r ) {
     // T = (n * cos(theta_i) - cos(theta_t)) * N + (n * d)
 
     double n = n_i / n_t;
-    double cos_theta_i = - i.N * r.getDirection();
-    double cos_theta_t = sqrt(1 - pow(n,2) * (1 - pow(cos_theta_i, 2)));
+    double cos_theta_i = - (i.N * r.getDirection());
+    double cos_theta_t = sqrt(1.0 - (n * n) * (1.0 - (cos_theta_i * cos_theta_i)));
 
-    Vec3d T = (n * cos_theta_i - cos_theta_t) * i.N + n * r.getDirection();
+    //Vec3d T = (n * cos_theta_i - cos_theta_t) * i.N + n * r.getDirection();
+    Vec3d T = (n * r.getDirection()) + (n * cos_theta_i - cos_theta_t) * i.N;
     T.normalize();
 
     return ray ( Q, T, ray::REFRACTION );
