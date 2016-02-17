@@ -102,9 +102,10 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 	// scene->intersect(r_light, i_light);
 
 
-
+	
 	if(scene->intersect( r, i ) && i.t > RAY_EPSILON){
-		atten = Vec3d(0,0,0);
+		Material m = i.getMaterial();
+		atten = m.kt(i);
 	}
 	else{
 		// i.setT(RAY_EPSILON);

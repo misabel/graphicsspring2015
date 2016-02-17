@@ -27,6 +27,7 @@ public:
 	TraceUI()
 		: m_nDepth(0), m_nSize(400), 
 		m_displayDebuggingInfo( false ),
+		m_antiAliasing(false),
 		raytracer( 0 )
 	{ }
 
