@@ -251,3 +251,64 @@ ray RayTracer::getReflectedRay( isect i, ray r )
     return ray ( Q, R, ray::REFLECTION );
 }
 
+// Vec3d RayTracer::subdivide_pixel(double bound, int count, Vec2d coord){
+// 	Vec3d max_diff = Vec3d(10, 10, 10);
+// 	bool subdivide = false;
+// 	Vec2d points [] = {Vec2d(0,0), Vec2d(0,0),Vec2d(0,0), Vec2d(0,0)};
+// 	Vec3d colors [] = {Vec3d(0,0, 0), Vec3d(0,0, 0),Vec3d(0,0, 0), Vec3d(0,0, 0)};
+
+// 	points[0] = coord;
+// 	colors[0] = trace(coord[0], coord[1]);
+
+// 	int p_count = 1;
+
+// 	// Vec3d col = Vec3d(0,0,0);
+
+// 	for(int pp = 0; pp < bound; pp +=bound){
+// 		int q_start = 0;
+// 		if(pp == 0)
+// 			q_start = bound;
+
+// 		for(int qq = q_start; qq < bound; qq +=bound){
+
+// 			double x = double(coord[0] + pp/4);
+// 			double y = double(coord[1] + qq/4);
+
+// 			points[p_count] = Vec2d(x, y);
+
+// 			Vec3d newCol = trace(x, y);
+// 			colors[p_count++] = newCol;
+
+// 			// color +=newCol;
+// 			// total_rays++;
+
+// 			Vec3d diff = colors[0] - newCol;
+
+// 			if(abs(diff[0] > max_diff[0]) || abs(diff[1] > max_diff[1]) || abs(diff[2] > max_diff[2]) ){
+// 				subdivide = true;
+// 			}
+
+// 		}
+// 	}
+
+
+// 	if(subdivide && count < division_Threshold){
+// 		return subdivide_pixel(bound / 2,  count + 1, points[0]) + 
+// 		subdivide_pixel(bound / 2,  count + 1, points[1]) +
+// 		subdivide_pixel(bound / 2, count + 1, points[2]) + 
+// 		subdivide_pixel(bound / 2,  count + 1, points[3]);
+// 	}
+
+// 	else {
+// 		Vec3d color = Vec3d(0,0,0);
+// 		for(int p = 0; p < 4; p++){
+
+// 			total_rays++;
+// 			Vec3d c = colors[p];
+// 			color += c;
+// 		}
+
+// 		return color;
+// 	}
+// }
+

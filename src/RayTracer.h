@@ -35,7 +35,7 @@ public:
     bool isReady() const
       { return m_bBufferReady; }
 
-    
+
 
     // static void start(ThreadPool* threads, void* arg);
 
@@ -48,6 +48,11 @@ private:
 	Scene* scene;
 
     bool m_bBufferReady;
+
+    // int division_Threshold = 10;
+    // int total_rays;
+
+    Vec3d subdivide_pixel(double bound, int count, Vec2d coord);
 
 };
 
