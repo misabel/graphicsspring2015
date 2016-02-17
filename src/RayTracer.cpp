@@ -90,6 +90,31 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
             /* 3. Determine the refracted color component
              * (recursive call to the traceRay function,
              * test and handle for total internal refraction) */
+            double n_i;
+            double n_t;
+
+            if (isRayEnteringObject(i, r)) {
+                n_i = 1.000293;
+                n_t = m.index(i);
+            }
+            else {
+                n_i = m.index(i);
+                n_t = 1.000293;
+            }
+
+            if (!isTotalInternalReflection(n_i, n_t, i, r)) {
+                ray transmittedRay = getTransmittedRay(n_i, n_t, i, r);
+
+                // Transmissive property
+                //Vec3d v3 = m.kt(i);
+
+                // Recursive call to get refracted vector
+                //Vec3d v4 = traceRay(transmittedRay, Vec3d(1.0, 1.0, 1.0), depth - 1);
+
+                Vec3d refractedColor = prod(m.kt(i),traceRay(transmittedRay, Vec3d(1.0, 1.0, 1.0), depth - 1));
+
+                color = color + refractedColor;
+            }
         }
         return color;
 
@@ -251,64 +276,36 @@ ray RayTracer::getReflectedRay( isect i, ray r )
     return ray ( Q, R, ray::REFLECTION );
 }
 
-// Vec3d RayTracer::subdivide_pixel(double bound, int count, Vec2d coord){
-// 	Vec3d max_diff = Vec3d(10, 10, 10);
-// 	bool subdivide = false;
-// 	Vec2d points [] = {Vec2d(0,0), Vec2d(0,0),Vec2d(0,0), Vec2d(0,0)};
-// 	Vec3d colors [] = {Vec3d(0,0, 0), Vec3d(0,0, 0),Vec3d(0,0, 0), Vec3d(0,0, 0)};
+bool RayTracer::isRayEnteringObject( isect i, ray r ) {
+	return (- r.getDirection() * i.N) > 0;
+}
 
-// 	points[0] = coord;
-// 	colors[0] = trace(coord[0], coord[1]);
+bool RayTracer::isTotalInternalReflection( double n_i, double n_t, isect i, ray r ) {
+    double n = n_i / n_t;
+    double cos_theta_i = - (i.N * r.getDirection());
+    return (1.0 - (n * n) * (1.0 - (cos_theta_i * cos_theta_i))) < 0.0;
+}
 
-// 	int p_count = 1;
+ray RayTracer::getTransmittedRay( double n_i, double n_t, isect i, ray r ) {
 
-// 	// Vec3d col = Vec3d(0,0,0);
+    /* A ray has a position where the ray starts,
+     * and a direction (which should be normalized) */
 
-// 	for(int pp = 0; pp < bound; pp +=bound){
-// 		int q_start = 0;
-// 		if(pp == 0)
-// 			q_start = bound;
+    // REFRACTION POSITION
+    // Refraction ray starts where intersection occurs
+    Vec3d Q = r.at(i.t);
 
-// 		for(int qq = q_start; qq < bound; qq +=bound){
+    // REFRACTION DIRECTION
+    // T = (n * cos(theta_i) - cos(theta_t)) * N + (n * d)
 
-// 			double x = double(coord[0] + pp/4);
-// 			double y = double(coord[1] + qq/4);
+    double n = n_i / n_t;
+    double cos_theta_i = - (i.N * r.getDirection());
+    double cos_theta_t = sqrt(1.0 - (n * n) * (1.0 - (cos_theta_i * cos_theta_i)));
 
-// 			points[p_count] = Vec2d(x, y);
+    //Vec3d T = (n * cos_theta_i - cos_theta_t) * i.N + n * r.getDirection();
+    Vec3d T = (n * r.getDirection()) + (n * cos_theta_i - cos_theta_t) * i.N;
+    T.normalize();
 
-// 			Vec3d newCol = trace(x, y);
-// 			colors[p_count++] = newCol;
-
-// 			// color +=newCol;
-// 			// total_rays++;
-
-// 			Vec3d diff = colors[0] - newCol;
-
-// 			if(abs(diff[0] > max_diff[0]) || abs(diff[1] > max_diff[1]) || abs(diff[2] > max_diff[2]) ){
-// 				subdivide = true;
-// 			}
-
-// 		}
-// 	}
-
-
-// 	if(subdivide && count < division_Threshold){
-// 		return subdivide_pixel(bound / 2,  count + 1, points[0]) + 
-// 		subdivide_pixel(bound / 2,  count + 1, points[1]) +
-// 		subdivide_pixel(bound / 2, count + 1, points[2]) + 
-// 		subdivide_pixel(bound / 2,  count + 1, points[3]);
-// 	}
-
-// 	else {
-// 		Vec3d color = Vec3d(0,0,0);
-// 		for(int p = 0; p < 4; p++){
-
-// 			total_rays++;
-// 			Vec3d c = colors[p];
-// 			color += c;
-// 		}
-
-// 		return color;
-// 	}
-// }
+    return ray ( Q, T, ray::REFRACTION );
+}
 
