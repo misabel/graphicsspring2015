@@ -882,14 +882,18 @@ DirectionalLight* Parser::parseDirectionalLight( Scene* scene )
 
 SpotLight* Parser::parseSpotLight( Scene* scene )
 {
-  Vec3d direction;
   Vec3d color;
-  double angle; // angle btw L and S
-  double falloff; // angular falloff coefficient
   Vec3d position;
+  Vec3d coneBoundray;
+  Vec3d coneDirection;
 
-  bool hasDirection( false ), hasColor( false ), hasAngle( false );
-  bool hasPosition( false ), hasFallOff( false );
+  // Default to the 'default' system
+  float constantAttenuationCoefficient = 0.0f;
+  float linearAttenuationCoefficient = 0.0f;
+  float quadraticAttenuationCoefficient = 1.0f;
+
+  bool hasColor( false ), hasPosition( false );
+  bool hasConeBoundray( false ), hasConeDirection( false );
 
   _tokenizer.Read( SPOT_LIGHT );
   _tokenizer.Read( LBRACE );
@@ -899,12 +903,6 @@ SpotLight* Parser::parseSpotLight( Scene* scene )
      const Token* t = _tokenizer.Peek();
      switch( t->kind() )
      {
-       case DIRECTION:
-         if( hasDirection )
-           throw SyntaxErrorException( "Repeated 'spot' attribute", _tokenizer );
-         direction = parseVec3dExpression();
-         hasDirection = true;
-         break;
 
        case COLOR:
          if( hasColor )
@@ -920,36 +918,48 @@ SpotLight* Parser::parseSpotLight( Scene* scene )
          hasPosition = true;
          break;
 
-      case ANGLE:
-         if( hasAngle )
-           throw SyntaxErrorException( "Repeated 'angle' attribute", _tokenizer );
-         angle = parseScalarExpression();
-         hasAngle = true;
+      case CONEBOUNDRAY:
+         if( hasConeBoundray )
+           throw SyntaxErrorException( "Repeated 'coneBoundray' attribute", _tokenizer );
+         coneBoundray = parseVec3dExpression();
+         hasConeBoundray = true;
          break;
 
-      case FALL_OFF:
-         if( hasFallOff )
-           throw SyntaxErrorException( "Repeated 'falloff' attribute", _tokenizer );
-         falloff = parseScalarExpression();
-         hasFallOff = true;
+      case CONEDIRECTION:
+         if( hasConeDirection )
+           throw SyntaxErrorException( "Repeated 'coneDirection' attribute", _tokenizer );
+         coneDirection = parseVec3dExpression();
+         hasConeDirection = true;
          break;
+
+      case CONSTANT_ATTENUATION_COEFF:
+         constantAttenuationCoefficient = parseScalarExpression();
+     break;
+
+       case LINEAR_ATTENUATION_COEFF:
+         linearAttenuationCoefficient = parseScalarExpression();
+     break;
+         
+       case QUADRATIC_ATTENUATION_COEFF:
+         quadraticAttenuationCoefficient = parseScalarExpression();
+     break;
 
         case RBRACE:
           if( !hasColor )
             throw SyntaxErrorException( "Expected: 'color'", _tokenizer );
-          if( !hasDirection )
-            throw SyntaxErrorException( "Expected: 'direction'", _tokenizer );
           if( !hasPosition )
             throw SyntaxErrorException( "Expected: 'position'", _tokenizer );
-          if( !hasAngle )
-            throw SyntaxErrorException( "Expected: 'angle'", _tokenizer );
-          if( !hasFallOff )
-            throw SyntaxErrorException( "Expected: 'fall_off'", _tokenizer );
+          if( !hasConeBoundray )
+            throw SyntaxErrorException( "Expected: 'coneBoundray'", _tokenizer );
+          if( !hasConeDirection )
+            throw SyntaxErrorException( "Expected: 'coneDirection'", _tokenizer );
           _tokenizer.Read( RBRACE );
-          return new SpotLight( scene, direction, color, angle, position, falloff );
+          return new SpotLight( scene, position, color, constantAttenuationCoefficient, 
+           linearAttenuationCoefficient, quadraticAttenuationCoefficient, 
+           coneBoundray, coneDirection );
 
         default:
-          throw SyntaxErrorException( "expecting 'position' or 'color' attribute", 
+          throw SyntaxErrorException( "expecting 'position' or 'color' attribute, or 'constant_attenuation_coeff', 'linear_attenuation_coeff', 'quadratic_attenuation_coeff', 'coneBoundray' or 'coneDirection'", 
             _tokenizer );
      }
   }

@@ -48,28 +48,40 @@ public:
 	void glDraw() const;
 };
 
+
 class SpotLight
 	: public Light
 {
 public:
-	SpotLight(Scene *scene, const Vec3d& orien, const Vec3d& color, 
-		const double angle, const Vec3d& position, const double falloff)
-		: Light(scene, color), orientation(orien), angle(angle), position(position), falloff(falloff) 
-		{ orientation.normalize(); }
+	SpotLight(Scene *scene, const Vec3d& pos, const Vec3d& color, 
+		float constantAttenuationTerm, float linearAttenuationTerm,
+		float quadraticAttenuationTerm, Vec3d boundray, Vec3d direction)
+		: Light(scene, color), position(pos), 
+		constantTerm(constantAttenuationTerm), 
+		linearTerm(linearAttenuationTerm),
+		quadraticTerm(quadraticAttenuationTerm),
+		coneBoundray(boundray), coneDirection(direction)
+		{coneBoundray.normalize(), coneDirection.normalize();}
+
 	virtual Vec3d shadowAttenuation(const Vec3d& P) const;
-	virtual double distanceAttenuation( const Vec3d& P ) const;
+	virtual double distanceAttenuation(const Vec3d& P) const;
 	virtual Vec3d getColor() const;
-	virtual Vec3d getDirection( const Vec3d& P ) const;
+	virtual Vec3d getDirection(const Vec3d& P) const;
+
+	void setAttenuationConstants( float a, float b, float c )
+	{
+		constantTerm = a;
+		linearTerm = b;
+		quadraticTerm = c;
+	}
 
 protected:
-	Vec3d 		orientation;
-	Vec3d		position;
-	double		angle;
-	double		falloff;
-
-public:
-	void glDraw(GLenum lightID) const;
-	void glDraw() const;
+	Vec3d position;
+	float constantTerm;		// a
+	float linearTerm;		// b
+	float quadraticTerm;	// c
+	Vec3d coneBoundray;
+	Vec3d coneDirection;
 };
 
 class PointLight

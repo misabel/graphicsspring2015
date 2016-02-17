@@ -73,7 +73,7 @@ string getNameForToken( const SYMBOL kind )
     tokenNames[ NORMALS ]           = "normals";
     tokenNames[ MATERIALS ]         = "materials";
     tokenNames[ FACES ]             = "faces";
-	tokenNames[ TEXTURE_UV ]		= "texture_uv";
+	  tokenNames[ TEXTURE_UV ]		    = "texture_uv";
     tokenNames[ TRANSLATE ]         = "translate";
     tokenNames[ SCALE ]             = "scale";
     tokenNames[ ROTATE ]            = "rotate";
@@ -90,8 +90,9 @@ string getNameForToken( const SYMBOL kind )
     tokenNames[ NAME ]              = "name";
     tokenNames[ MAP ]               = "map";
 	  tokenNames[ LOOK_AT ]			      = "look_at";
-    tokenNames[ ANGLE ]             = "angle";
-    tokenNames[ FALL_OFF ]         = "fall_off";
+    tokenNames[ CONEBOUNDRAY ]      = "coneBoundray";
+    tokenNames[ CONEDIRECTION ]      = "coneDirection";
+
   }
   // search tokenNames table
   std::map<int, string>::const_iterator itr = 
@@ -123,7 +124,6 @@ SYMBOL lookupReservedWord(const string& ident) {
     reservedWords["ambient_light"] = AMBIENT_LIGHT;
     reservedWords["ambient"] = AMBIENT;
     reservedWords["aspectratio"] = ASPECTRATIO;
-    reservedWords["angle"] = ANGLE;
     reservedWords["bottom_radius"] = BOTTOM_RADIUS;
     reservedWords["box"] = BOX;
     reservedWords["camera"] = CAMERA;
@@ -131,6 +131,8 @@ SYMBOL lookupReservedWord(const string& ident) {
     reservedWords["color"] = COLOR;
     reservedWords["colour"] = COLOR;
     reservedWords["cone"] = CONE;
+    reservedWords["coneBoundray"] = CONEBOUNDRAY;
+    reservedWords["coneDirection"] = CONEDIRECTION;
     reservedWords["constant_attenuation_coeff"] = CONSTANT_ATTENUATION_COEFF;
     reservedWords["cylinder"] = CYLINDER;
     reservedWords["diffuse"] = DIFFUSE;
@@ -139,7 +141,6 @@ SYMBOL lookupReservedWord(const string& ident) {
     reservedWords["emissive"] = EMISSIVE;
     reservedWords["faces"] = FACES;	
     reservedWords["false"] = SYMFALSE;
-    reservedWords["fall_off"] = FALL_OFF;
     reservedWords["fov"] = FOV;
     reservedWords["gennormals"] = GENNORMALS;
     reservedWords["height"] = HEIGHT;
