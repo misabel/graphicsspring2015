@@ -60,9 +60,9 @@ Scene* Parser::parseScene()
       case DIRECTIONAL_LIGHT:
          scene->add( parseDirectionalLight( scene ) );
          break;
-      case SPOT_LIGHT:
+      /*case SPOT_LIGHT:
          scene->add( parseSpotLight( scene ) );
-         break;
+         break;*/
       case AMBIENT_LIGHT:
          parseAmbientLight( scene );
          break;
@@ -879,7 +879,7 @@ DirectionalLight* Parser::parseDirectionalLight( Scene* scene )
      }
   }
 }
-
+/*
 SpotLight* Parser::parseSpotLight( Scene* scene )
 {
   Vec3d color;
@@ -965,7 +965,7 @@ SpotLight* Parser::parseSpotLight( Scene* scene )
   }
 }
 
-
+*/
 // These ought to be done with template member functions, but compiler support for
 // these is rather iffy...
 double Parser::parseScalarExpression()

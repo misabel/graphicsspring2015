@@ -47,7 +47,7 @@ string getNameForToken( const SYMBOL kind )
 	tokenNames[ AMBIENT_LIGHT ]     = "ambient_light";
     tokenNames[ POINT_LIGHT ]       = "point_light";
     tokenNames[ DIRECTIONAL_LIGHT ] = "directional_light";
-    tokenNames[ SPOT_LIGHT ]        = "spot_light";
+    //tokenNames[ SPOT_LIGHT ]        = "spot_light";
     tokenNames[ CONSTANT_ATTENUATION_COEFF ] = "constant_attenuation_coeff";
     tokenNames[ LINEAR_ATTENUATION_COEFF ] = "linear_attenuation_coeff";
     tokenNames[ QUADRATIC_ATTENUATION_COEFF ] = "quadratic_attenuation_coeff";
@@ -90,8 +90,8 @@ string getNameForToken( const SYMBOL kind )
     tokenNames[ NAME ]              = "name";
     tokenNames[ MAP ]               = "map";
 	  tokenNames[ LOOK_AT ]			      = "look_at";
-    tokenNames[ CONEBOUNDRAY ]      = "coneBoundray";
-    tokenNames[ CONEDIRECTION ]      = "coneDirection";
+    //tokenNames[ CONEBOUNDRAY ]      = "coneBoundray";
+    //tokenNames[ CONEDIRECTION ]      = "coneDirection";
 
   }
   // search tokenNames table
@@ -131,8 +131,8 @@ SYMBOL lookupReservedWord(const string& ident) {
     reservedWords["color"] = COLOR;
     reservedWords["colour"] = COLOR;
     reservedWords["cone"] = CONE;
-    reservedWords["coneBoundray"] = CONEBOUNDRAY;
-    reservedWords["coneDirection"] = CONEDIRECTION;
+    //reservedWords["coneBoundray"] = CONEBOUNDRAY;
+    //reservedWords["coneDirection"] = CONEDIRECTION;
     reservedWords["constant_attenuation_coeff"] = CONSTANT_ATTENUATION_COEFF;
     reservedWords["cylinder"] = CYLINDER;
     reservedWords["diffuse"] = DIFFUSE;
@@ -164,7 +164,7 @@ SYMBOL lookupReservedWord(const string& ident) {
     reservedWords["shininess"] = SHININESS;
     reservedWords["specular"] = SPECULAR;
     reservedWords["sphere"] = SPHERE;
-    reservedWords["spot_light"] = SPOT_LIGHT;
+    //reservedWords["spot_light"] = SPOT_LIGHT;
     reservedWords["square"] = SQUARE;
 	reservedWords["texture_uv"] = TEXTURE_UV;
     reservedWords["top_radius"] = TOP_RADIUS;

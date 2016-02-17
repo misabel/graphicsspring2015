@@ -48,7 +48,7 @@ public:
 	void glDraw() const;
 };
 
-
+/*
 class SpotLight
 	: public Light
 {
@@ -82,7 +82,7 @@ protected:
 	float quadraticTerm;	// c
 	Vec3d coneBoundray;
 	Vec3d coneDirection;
-};
+};*/
 
 class PointLight
 	: public Light

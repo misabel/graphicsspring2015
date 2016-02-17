@@ -45,7 +45,7 @@ enum SYMBOL {
   POINT_LIGHT,				// lights
   DIRECTIONAL_LIGHT,
   AMBIENT_LIGHT,
-  SPOT_LIGHT,
+  //SPOT_LIGHT,
 
   CONSTANT_ATTENUATION_COEFF,	// Terms affecting the intensity dropoff
   LINEAR_ATTENUATION_COEFF,		// of point lights (see the PointLight 
@@ -63,8 +63,8 @@ enum SYMBOL {
   FOV,
   COLOR,
   DIRECTION,
-  CONEBOUNDRAY,
-  CONEDIRECTION,
+  //CONEBOUNDRAY,
+  //CONEDIRECTION,
   CAPPED,
   HEIGHT,
   BOTTOM_RADIUS,

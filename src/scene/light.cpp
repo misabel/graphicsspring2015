@@ -111,7 +111,7 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
     return atten; 
 
 }
-
+/*
 double SpotLight::distanceAttenuation( const Vec3d& P ) const
 {
 	// distance to light is infinite, so f(di) goes to 0.  Return 1.
@@ -161,4 +161,4 @@ Vec3d SpotLight::getDirection( const Vec3d& P ) const
 	if(ret!=Vec3d(0,0,0))
 		ret.normalize();
 	return ret;
-}
+}*/

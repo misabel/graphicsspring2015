@@ -649,7 +649,7 @@ void DirectionalLight::glDraw() const
 	glPopMatrix();
 
 }
-
+/*
 void SpotLight::glDraw(GLenum lightID) const
 {
 	GLfloat fColor[4];
@@ -661,15 +661,30 @@ void SpotLight::glDraw(GLenum lightID) const
 	glLightfv( lightID, GL_SPECULAR, fColor );
 
 	GLfloat pos[4];
-	pos[0] = GLfloat(-orientation[0]);
-	pos[1] = GLfloat(-orientation[1]);
-	pos[2] = GLfloat(-orientation[2]);
-	pos[3] = 0.0f;
+	pos[0] = GLfloat(position[0]);
+	pos[1] = GLfloat(position[1]);
+	pos[2] = GLfloat(position[2]);
+	pos[3] = 1.0f;
 	glLightfv( lightID, GL_POSITION, pos );
 
 	glLightf( lightID, GL_CONSTANT_ATTENUATION, 1.0f );
 	glLightf( lightID, GL_LINEAR_ATTENUATION, 0.0f );
 	glLightf( lightID, GL_QUADRATIC_ATTENUATION, 0.0f );
+
+	GLfloat bound[4];
+	bound[0] = GLfloat(coneBoundray[0]);
+	bound[1] = GLfloat(coneBoundray[1]);
+	bound[2] = GLfloat(coneBoundray[2]);
+	bound[3] = 1.0f;
+	glLightfv( lightID, GL_CONEBOUNDRAY, bound );
+
+	GLfloat dir[4];
+	dir[0] = GLfloat(coneDirection[0]);
+	dir[1] = GLfloat(coneDirection[1]);
+	dir[2] = GLfloat(coneDirection[2]);
+	dir[3] = 1.0f;
+	glLightfv( lightID, GL_CONEDIRECTION, dir );
+
 }
 
 
@@ -692,7 +707,7 @@ void SpotLight::glDraw() const
 		maxVec = maximum( scene->getCamera().getEye() + scene->getCamera().getLook(), maxVec );
 		maxDist = max( max( maxVec[0], maxVec[1] ), maxVec[2] );
 
-		Vec3d uAxis = orientation;
+		Vec3d uAxis = position;
 		uAxis.normalize();
 
 		// The first thing we need is the light's coordinate system (u,v,w).  To do this,
@@ -775,3 +790,4 @@ void SpotLight::glDraw() const
 	glPopMatrix();
 
 }
+*/
