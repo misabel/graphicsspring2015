@@ -90,6 +90,31 @@ Vec3d RayTracer::traceRay( const ray& r, const Vec3d& thresh, int depth )
             /* 3. Determine the refracted color component
              * (recursive call to the traceRay function,
              * test and handle for total internal refraction) */
+            double n_i;
+            double n_t;
+
+            if (isRayEnteringObject(i, r)) {
+                n_i = 1.000293;
+                n_t = m.index(i);
+            }
+            else {
+                n_i = m.index(i);
+                n_t = 1.000293;
+            }
+
+            if (!isTotalInternalReflection(n_i, n_t, i, r)) {
+                ray transmittedRay = getTransmittedRay(n_i, n_t, i, r);
+
+                // Transmissive property
+                Vec3d v3 = m.kt(i);
+
+                // Recursive call to get refracted vector
+                Vec3d v4 = traceRay(transmittedRay, Vec3d(1.0, 1.0, 1.0), depth - 1);
+
+                Vec3d refractedColor = prod(v3,v4);
+
+                color = color + refractedColor;
+            }
         }
         return color;
 
@@ -251,3 +276,34 @@ ray RayTracer::getReflectedRay( isect i, ray r )
     return ray ( Q, R, ray::REFLECTION );
 }
 
+bool RayTracer::isRayEnteringObject( isect i, ray r ) {
+	return (r.getDirection() * i.N) < 0;
+}
+
+bool RayTracer::isTotalInternalReflection( double n_i, double n_t, isect i, ray r ) {
+    double n = n_i / n_t;
+    double cos_theta_i = - i.N * r.getDirection();
+    return (1 - pow(n,2) * (1 - pow(cos_theta_i, 2))) < 0;
+}
+
+ray RayTracer::getTransmittedRay( double n_i, double n_t, isect i, ray r ) {
+
+    /* A ray has a position where the ray starts,
+     * and a direction (which should be normalized) */
+
+    // REFRACTION POSITION
+    // Refraction ray starts where intersection occurs
+    Vec3d Q = r.at(i.t);
+
+    // REFRACTION DIRECTION
+    // T = (n * cos(theta_i) - cos(theta_t)) * N + (n * d)
+
+    double n = n_i / n_t;
+    double cos_theta_i = - i.N * r.getDirection();
+    double cos_theta_t = sqrt(1 - pow(n,2) * (1 - pow(cos_theta_i, 2)));
+
+    Vec3d T = (n * cos_theta_i - cos_theta_t) * i.N + n * r.getDirection();
+    T.normalize();
+
+    return ray ( Q, T, ray::REFRACTION );
+}

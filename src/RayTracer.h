@@ -20,6 +20,9 @@ public:
 	Vec3d traceRay( const ray& r, const Vec3d& thresh, int depth );
 
 	ray getReflectedRay( isect i, ray r );
+	ray getTransmittedRay( double n_i, double n_t, isect i, ray r);
+	bool isRayEnteringObject( isect i, ray r );
+	bool isTotalInternalReflection( double n_i, double n_t, isect i, ray r );
 
 	void getBuffer( unsigned char *&buf, int &w, int &h );
 	double aspectRatio();
