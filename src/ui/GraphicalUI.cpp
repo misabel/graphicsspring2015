@@ -193,6 +193,13 @@ void GraphicalUI::cb_debuggingDisplayCheckButton(Fl_Widget* o, void* v)
 		pUI->m_debuggingWindow->hide();
 }
 
+void GraphicalUI::cb_antiAliasingCheckButton(Fl_Widget* o, void* v)
+{
+	GraphicalUI* pUI=(GraphicalUI*)(o->user_data());
+	pUI->m_antiAliasing = (((Fl_Check_Button*)o)->value() == 1);
+	
+}
+
 
 
 void GraphicalUI::cb_render(Fl_Widget* o, void* v)
@@ -397,6 +404,12 @@ GraphicalUI::GraphicalUI() : m_nativeChooser(NULL) {
 		m_debuggingDisplayCheckButton->user_data((void*)(this));
 		m_debuggingDisplayCheckButton->callback(cb_debuggingDisplayCheckButton);
 		m_debuggingDisplayCheckButton->value(m_displayDebuggingInfo);
+
+		// set up antialiasing  checkbox
+        m_antiAliasingCheckButton = new Fl_Check_Button(0, 260, 180, 20, "Anti-Aliasing");
+		m_antiAliasingCheckButton->user_data((void*)(this));
+		m_antiAliasingCheckButton->callback(cb_antiAliasingCheckButton);
+		m_antiAliasingCheckButton->value(m_displayDebuggingInfo);
 
 
 		// set up "render" button

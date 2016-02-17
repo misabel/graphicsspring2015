@@ -107,7 +107,7 @@ Vec3d PointLight::shadowAttenuation(const Vec3d& P) const
 		atten = Vec3d(0,0,0);
 	}
 	else{
-		i.setT(RAY_EPSILON);
+		// i.setT(RAY_EPSILON);
 		atten = Vec3d(1,1,1);
 	}
 

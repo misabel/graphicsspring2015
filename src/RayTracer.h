@@ -35,6 +35,8 @@ public:
     bool isReady() const
       { return m_bBufferReady; }
 
+    
+
     // static void start(ThreadPool* threads, void* arg);
 
 	const Scene& getScene() { return *scene; }

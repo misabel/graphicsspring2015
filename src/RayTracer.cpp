@@ -25,7 +25,7 @@ using namespace std;
 // debugging messages.  Gets set in the "trace single ray" mode
 // in TraceGLWindow, for example.
 bool debugMode = false;
-bool anti_aliasing = true;
+// bool anti_aliasing = true;
 
 // Trace a top-level ray through normalized window coordinates (x,y)
 // through the projection plane, and out into the scene.  All we do is
@@ -201,7 +201,7 @@ void RayTracer::tracePixel( int i, int j )
 
 	
 
-	if(anti_aliasing){
+	if(traceUI->antiAlias()){
 
 		col= Vec3d(0,0,0);
 		int sample_rate = 5;

@@ -46,6 +46,9 @@ public:
 	void setMultithreading(bool multithread) { this->multithread = multithread; }
 	bool isMultithreading() const { return multithread; }
 
+	bool antiAlias() const
+	{ return m_antiAliasing;};
+
 private:
 	bool multithread;
 
@@ -66,6 +69,7 @@ protected:
 	// for individual rays.  Disabled by default for efficiency
 	// reasons.
 	bool		m_displayDebuggingInfo;
+	bool		m_antiAliasing;
 
 
 
