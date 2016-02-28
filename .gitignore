@@ -2,6 +2,7 @@
 
 Makefile
 trace
+modeler
 
 # Compiled Object files
 *.slo
