@@ -346,7 +346,7 @@ public:
 
 	void normalize() { 
 		T len = (T) length();
-		assert(len != 0);
+		if(len == 0) return;
 		n[0] /= len; n[1] /= len; n[2] /= len;
 	}
 

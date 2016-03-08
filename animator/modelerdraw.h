@@ -103,7 +103,7 @@ typedef struct tag_POINT_2D {
 int load_2dcurve_txt(char* filename,std::vector<Point2d>* pts, std::vector<Point2d>* pts_2, std::vector<Point2d>* pts_3, std::vector<Point2d>* pts_4);
 // Surface of revolution
 void drawRevolution(double scale);
-void drawRevolution(std::vector<Point2d> *pts, int divisions, double scale);
+void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale);
 
 // Draw an axis-aligned box from origin to (x,y,z)
 void drawBox( double x, double y, double z );
