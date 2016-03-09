@@ -17,6 +17,7 @@
 #include <algorithm>
 
 #include "vec.h"
+#include "vault.h"
 
 using namespace std;
 // Helper functions from the red book so we can print text on the
@@ -576,7 +577,7 @@ int write_revolution_rayfile(FILE* rayfile, int num_vertices, int num_triangles,
 void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 {
 	std::vector<Point2d> revolution_pts = *pts;
-	
+	Texture2D checkers = Texture2D("checkers.png");
 
     ModelerDrawState *mds = ModelerDrawState::Instance();
 	_setupOpenGl();
@@ -588,10 +589,15 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 	// cout << "THIS IS CALLED" << endl;
 	// YOUR DRAW REVOLUTION CODE HERE
 
+	// checkers("checkers.png", GL_REPLACE);
+
+	checkers.load();
+	checkers.use();
+	
 	int num_pts = revolution_pts.size();
 
 	for(int i = 0; i < divisions ; i++){
-		for(int j = 0; j < num_pts -1 ; j++){
+		for(int j = 0; j < num_pts - 1 ; j++){
 			float rotation = (2 * PI * i)/divisions;
 			// float p_x = rotation * revolution_pts[j].x * scale;
 			// float p_y = i + origin_y;
@@ -641,11 +647,12 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 			n4 = ((2 * PI * (i + 1))/divisions) * n4;
 
 
-			float texture1_u = i/divisions;
+			float texture1_u = (float)i/divisions;
+			cout << texture1_u << endl;
 			
 			float nominator = 0;
 
-			for(int k = 0; k < j; k++){
+			for(int k = 0; k < j + 1; k++){
 
 				if(k == 0) {
 					nominator += 0;
@@ -678,17 +685,36 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 
 			float texture1_v = nominator/denominator;
 
-			float texture2_u = (i + 1)/divisions;
-			float texture2_v = texture1_v;
+			float texture2_u = texture1_u;
+			
+			nominator = 0;
+			for(int k = 0; k < j; k++){
 
-			float texture3_u = texture2_u;
+				if(k == 0) {
+					nominator = 0;
+				}
+
+				else {
+					// float distance = abs(revolution_pts[k].y - revolution_pts[ k - 1 ].y); //distance
+					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
+					// distance.normalize();
+
+					nominator += distance;
+				}
+
+			}
+
+
+			float texture2_v = nominator/denominator;
+
+			float texture3_u = (float)(i + 1)/divisions;
 
 			nominator = 0;
 
-			for(int k = 0; k < (j + 1); k++){
+			for(int k = 0; k < j; k++){
 
 				if(k == 0) {
-					nominator += 0;
+					nominator = 0;
 				}
 
 				else {
@@ -697,28 +723,12 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 
 					nominator += distance;
 				}
-				
-
-			}
-
-			denominator = 0;
-
-			for(int k = 0; k < num_pts - 1; k++){
-				if(k == 0) {
-					denominator += 0;
-				}
-				else {
-					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
-					// distance.normalize();
-
-					denominator += distance;
-				}
 			}
 
 			float texture3_v = nominator/denominator;
 
-			float texture4_u = texture1_u;
-			float texture4_v = texture3_v;
+			float texture4_u = texture3_u;
+			float texture4_v = texture1_v;
 
 
 			const GLfloat vertices[] = {
@@ -750,6 +760,7 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 			glEnableClientState(GL_COLOR_ARRAY);
 			glEnableClientState(GL_VERTEX_ARRAY);
 
+
 			
 			glNormalPointer( GL_FLOAT, 0, normals);
 			glTexCoordPointer(2, GL_FLOAT, 0, textures);
@@ -760,11 +771,15 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 
 			glDisableClientState(GL_NORMAL_ARRAY);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDisableClientState(GL_COLOR_ARRAY);
 			glDisableClientState(GL_VERTEX_ARRAY);
 
+			checkers.use();
 
 		}
+
 	}
+	glBindTexture(GL_TEXTURE_2D, 0);
 	
 }
 
