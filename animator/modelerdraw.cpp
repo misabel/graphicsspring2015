@@ -648,7 +648,7 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 
 
 			float texture1_u = (float)i/divisions;
-			cout << texture1_u << endl;
+			
 			
 			float nominator = 0;
 
@@ -695,7 +695,6 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 				}
 
 				else {
-					// float distance = abs(revolution_pts[k].y - revolution_pts[ k - 1 ].y); //distance
 					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
 					// distance.normalize();
 
