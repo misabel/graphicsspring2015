@@ -4,6 +4,7 @@
 #include <cmath>
 #include "vec.h"
 #include "properties.h"
+#include "ParticleSystem.h"
 
 /** Forward-declare ICamera because it's used in Model yet is a Model. */
 class ICamera;
@@ -59,6 +60,21 @@ public:
 	 * Override this method to return the particle system you want to control.
 	 */
 	virtual ParticleSystem* getParticleSystem();
+};
+
+class MyModel : public Model {
+
+	 ParticleSystem ps;
+	 
+protected:
+  RangeProperty headRotation, leftUpperArmTilt, leftLowerArmTilt, rightUpperArmTilt,
+  				rightLowerArmTilt, leftUpperLegTilt, leftLowerLegTilt, rightUpperLegTilt,
+  				rightLowerLegTilt;
+
+public:
+  MyModel();
+  void draw();
+
 };
 
 /**

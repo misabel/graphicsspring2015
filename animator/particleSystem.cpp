@@ -18,7 +18,7 @@ static float prevT;
  * Constructors
  ***************/
 
-ParticleSystem::ParticleSystem() 
+ParticleSystem::ParticleSystem() : restitution("Restitution", 0.0f, 2.0f, 1.0f, 0.1f)
 {
 	// YOUR CODE HERE
 
@@ -88,6 +88,7 @@ void ParticleSystem::resetSimulation(float t)
 void ParticleSystem::computeForcesAndUpdateParticles(float t)
 {
 	// YOUR CODE HERE
+	
 
 	// Debugging info
 	/*if( t - prevT > .08 )
