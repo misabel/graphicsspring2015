@@ -24,11 +24,13 @@
 #pragma warning(disable : 4305)
 
 #include "vec.h"
-
+#include "properties.h"
+#include <vector>
 
 class ParticleSystem {
 public:
 
+     RangeProperty restitution;
 
 	/** Constructor **/
 	ParticleSystem();

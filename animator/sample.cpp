@@ -18,7 +18,7 @@
 #include <cmath>
 #include <time.h>
 
-
+/*
 void ground(float h);
 void base(float h);
 void rotation_base(float h);
@@ -58,9 +58,9 @@ public:
 // We are going to override (is that the right word?) the draw()
 // method of ModelerView to draw out RobotArm
 void RobotArm::draw()
-{
+{*/
 	/* pick up the slider values */
-	float theta = baseRotation.getValue();
+	/*float theta = baseRotation.getValue();
 	float phi = lowerTilt.getValue();
 	float psi = upperTilt.getValue();
 	float cr = clawRotation.getValue();
@@ -120,18 +120,22 @@ void base(float h) {
 			glTranslatef(1.0, h / 2.0, 0.75);
 			drawCylinder(0.25, h / 2.0, h / 2.0);
 		glPopMatrix();
+
 		glPushMatrix();
 			glTranslatef(1.0, h / 2.0, -1.0);
 			drawCylinder(0.25, h / 2.0, h / 2.0);
 		glPopMatrix();
+
 		glPushMatrix();
 			glTranslatef(-1.0, h / 2.0, 0.75);
 			drawCylinder(0.25, h / 2.0, h / 2.0);
 		glPopMatrix();
+
 		glPushMatrix();
 			glTranslatef(-1.0, h / 2.0, -1.0);
 			drawCylinder(0.25, h / 2.0, h / 2.0);
 		glPopMatrix();
+
 	glScalef(4.0f, h, 4.0f);
 	y_box(1.0f);
 	glPopMatrix();
@@ -253,7 +257,7 @@ void y_box(float h) {
 	glVertex3d( 0.25,0.0,-0.25);
 
 	glEnd();
-}
+}*/
 
 /** The scene, which includes the lights and models. */
 
@@ -290,7 +294,8 @@ protected:
 	DirectionalLight directionalLight;
 
 	// A robot arm model
-	RobotArm robotArm;
+	//RobotArm robotArm;
+	MyModel myModel;
 
 public:
 	ParticleSystem ps;
@@ -305,7 +310,7 @@ public:
 
 	/** Construct the scene */
 	Scene() :
-	    // You have to call the parent class's constructor, to provide a
+	    // You have to call the parent class's constructor, tso provide a
 	    // name for the model.
 	    Model("Scene"),
 
@@ -340,11 +345,19 @@ public:
 		// in the top left corner of Modeler, under this model's entry:
 		properties.add(pointLight.getProperties())
 				  .add(directionalLight.getProperties())
+				  .add(myModel.getProperties())
 				  ;
-		properties.add(robotArm.getProperties());
+		//properties.add(robotArm.getProperties());
 
 		// Finally, add all the properties to this model's PropertyGroup.
-		properties.add(&useTexture);
+		properties.add(&useTexture)
+				  //.add(&showReferenceUnitSphere)
+				  //.add(&shapeChoice)
+				  //.add(&useShader)
+				  //.add(&rotateX)
+				  //.add(&rotateY)
+				  //.add(&diffuse)
+				  ;
 		properties.add(&showReferenceUnitSphere)
 				  .add(&shapeChoice);
 		properties.add(&useShader)
@@ -444,7 +457,8 @@ public:
 				glTranslatef(sphereCenterX.getValue(), sphereCenterY.getValue(), sphereCenterZ.getValue());
 				glutSolidSphere(1.0, 20, 20); // the 20's are arbitary
 				glPopMatrix();
-				robotArm.draw();
+				//robotArm.draw();
+				myModel.draw();
 				break;
 				
 			}

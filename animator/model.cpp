@@ -1,6 +1,7 @@
 #include "model.h"
 #include <algorithm>
 #include "modelerdraw.h"
+#include "FL/glut.H"
 
 using namespace std;
 
@@ -14,6 +15,335 @@ ICamera* Model::getCamera() { return NULL; }
 ParticleSystem* Model::getParticleSystem() { 
 	return NULL; 
 };
+
+/////////////class MyModel ///////////////////
+void head_rotation(float h);
+void body(float h);
+void left_upper_arm(float h);
+void left_lower_arm(float h);
+void right_upper_arm(float h);
+void right_lower_arm(float h);
+void left_upper_leg(float h);
+void left_lower_leg(float h);
+void right_upper_leg(float h);
+void right_lower_leg(float h);
+void y_box(float h);
+
+MyModel::MyModel() :
+  	Model("Robot"),
+  	headRotation("Head Rotation", -90, 90, 0, 1), // minRange, maxRange, init, delta
+  	leftUpperArmTilt("Left upper arm tilt", 0, 250, 180, 1),
+  	leftLowerArmTilt("Left lower arm tilt", -115, 0, 0, 1),
+  	rightUpperArmTilt("Right upper arm tilt", 0, 250, 180, 1),
+  	rightLowerArmTilt("Right lower arm tilt", -115, 0, 0, 1),
+  	leftUpperLegTilt("Left upper leg tilt", 90, 250, 180, 1),
+  	leftLowerLegTilt("Left lower leg tilt", 0, 95, 0, 1),
+  	rightUpperLegTilt("Right upper leg tilt", 90, 250, 180, 1),
+  	rightLowerLegTilt("Right lower leg tilt", 0, 95, 0, 1)
+  {
+  	properties.add(&headRotation)
+			  .add(&leftUpperArmTilt)
+			  .add(&leftLowerArmTilt)
+			  .add(&rightUpperArmTilt)
+			  .add(&rightLowerArmTilt)
+			  .add(&leftUpperLegTilt)
+			  .add(&leftLowerLegTilt)
+			  .add(&rightUpperLegTilt)
+			  .add(&rightLowerLegTilt)
+			  .add(&ps.restitution);
+
+  }
+
+void MyModel::draw() {
+
+	/* pick up the slider values */
+	float hr = headRotation.getValue();
+	float lua = leftUpperArmTilt.getValue();
+	float lla = leftLowerArmTilt.getValue();
+	float rua = rightUpperArmTilt.getValue();
+	float rla = rightLowerArmTilt.getValue();
+	float lul = leftUpperLegTilt.getValue();
+	float lll = leftLowerLegTilt.getValue();
+	float rul = rightUpperLegTilt.getValue();
+	float rll = rightLowerLegTilt.getValue();
+
+	static GLfloat lmodel_ambient[] = {0.4,0.4,0.4,1.0};
+
+	// define the model
+	glPushMatrix();
+
+		// Head
+		glPushMatrix();
+			glTranslatef(0, 3.0, 0);
+			glRotatef(hr, 0, 1, 0);
+			head_rotation(0.8);
+		glPopMatrix();
+
+		// Body
+		glPushMatrix();
+			glTranslatef(0, 1.5, 0);
+			body(2.3);
+		glPopMatrix();
+
+		// Arms upper and lower, lower part is children of upper part
+		glPushMatrix();
+			glTranslatef(-1.2, 3.6, 0);
+			glRotatef(lua, 1, 0, 0);
+			left_upper_arm(1.2);
+
+			glTranslatef(0, 1.2, 0);
+			glRotatef(lla, 1, 0, 0);
+			left_lower_arm(0.9);
+		glPopMatrix();
+
+		glPushMatrix();
+			glTranslatef(1.2, 3.6, 0);
+			glRotatef(rua, 1, 0, 0);
+			right_upper_arm(1.2);
+
+			glTranslatef(0, 1.2, 0);
+			glRotatef(rla, 1, 0, 0);
+			left_lower_arm(0.9);
+		glPopMatrix();
+
+		// Legs upper and lower, lower part is children of upper part
+		glPushMatrix();
+			glTranslatef(-0.8, 1.5, 0);
+			glRotatef(lul, 1, 0, 0);
+			left_upper_leg(1.2);
+
+			glTranslatef(0, 1.2, 0);
+			glRotatef(lll, 1, 0, 0);
+			left_lower_leg(1.1);
+		glPopMatrix();
+
+		glPushMatrix();
+			glTranslatef(0.8, 1.5, 0);
+			glRotatef(rul, 1, 0, 0);
+			right_upper_leg(1.2);
+
+			glTranslatef(0, 1.2, 0);
+			glRotatef(rll, 1, 0, 0);
+			right_lower_leg(1.1);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void head_rotation(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+
+			setDiffuseColor( 0.15, 0.15, 0.65 );
+			setAmbientColor( 0.15, 0.15, 0.65 );
+
+			glPushMatrix();
+				glTranslatef(0, h, 0);
+				glScalef(1.5, 0.7, 1.5);
+				y_box(1.0f); 
+
+				setDiffuseColor(0.75, 0.75, 0.75);
+				setAmbientColor( 0.15, 0.15, 0.65 );
+				//glTranslatef(0, 0, 0);
+				drawCylinder(0.2, 0.2, 0.2);
+
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void body(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.65, 0.65, 0.65 );
+		setAmbientColor( 0.65, 0.65, 0.65 );
+
+		glPushMatrix();
+			glScalef(4.0, h, 1.8);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void left_upper_arm(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.3, 0.3, 0.3 );
+		setAmbientColor( 0.3, 0.3, 0.3 );
+
+		glPushMatrix();
+			glScalef(0.9, h, 0.9);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void left_lower_arm(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.3, 0.3, 0.3 );
+		setAmbientColor( 0.3, 0.3, 0.3 );
+
+		glPushMatrix();
+			glScalef(0.4, h, 0.4);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void right_upper_arm(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.3, 0.3, 0.3 );
+		setAmbientColor( 0.3, 0.3, 0.3 );
+
+		glPushMatrix();
+			glScalef(0.85, h, 1);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void right_lower_arm(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.3, 0.3, 0.3 );
+		setAmbientColor( 0.3, 0.3, 0.3 );
+
+		glPushMatrix();
+			glScalef(0.4, h, 0.4);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void left_upper_leg(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.7, 0.7, 0.7 );
+		setAmbientColor( 0.7, 0.7, 0.7 );
+
+		glPushMatrix();
+			
+			glScalef(0.8, h, 0.8);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void left_lower_leg(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.7, 0.7, 0.7 );
+		setAmbientColor( 0.7, 0.7, 0.7 );
+
+		glPushMatrix();
+			
+			glScalef(0.4, h, 0.4);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void right_upper_leg (float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.7, 0.7, 0.7 );
+		setAmbientColor( 0.7, 0.7, 0.7 );
+
+		glPushMatrix();
+			
+			glScalef(0.8, h, 0.8);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void right_lower_leg(float h) {
+	setDiffuseColor( 0.85, 0.75, 0.25 );
+	setAmbientColor( 0.95, 0.75, 0.25 );
+
+	glPushMatrix();
+		setDiffuseColor( 0.7, 0.7, 0.7 );
+		setAmbientColor( 0.7, 0.7, 0.7 );
+
+		glPushMatrix();
+			
+			glScalef(0.4, h, 0.4);
+			y_box(1.0f);
+		glPopMatrix();
+
+	glPopMatrix();
+}
+
+void y_box(float h) {
+
+	glBegin( GL_QUADS );
+
+	glNormal3d( 1.0 ,0.0, 0.0);			// +x side
+	glVertex3d( 0.25,0.0, 0.25);
+	glVertex3d( 0.25,0.0,-0.25);
+	glVertex3d( 0.25,  h,-0.25);
+	glVertex3d( 0.25,  h, 0.25);
+
+	glNormal3d( 0.0 ,0.0, -1.0);		// -z side
+	glVertex3d( 0.25,0.0,-0.25);
+	glVertex3d(-0.25,0.0,-0.25);
+	glVertex3d(-0.25,  h,-0.25);
+	glVertex3d( 0.25,  h,-0.25);
+
+	glNormal3d(-1.0, 0.0, 0.0);			// -x side
+	glVertex3d(-0.25,0.0,-0.25);
+	glVertex3d(-0.25,0.0, 0.25);
+	glVertex3d(-0.25,  h, 0.25);
+	glVertex3d(-0.25,  h,-0.25);
+
+	glNormal3d( 0.0, 0.0, 1.0);			// +z side
+	glVertex3d(-0.25,0.0, 0.25);
+	glVertex3d( 0.25,0.0, 0.25);
+	glVertex3d( 0.25,  h, 0.25);
+	glVertex3d(-0.25,  h, 0.25);
+
+	glNormal3d( 0.0, 1.0, 0.0);			// top (+y)
+	glVertex3d( 0.25,  h, 0.25);
+	glVertex3d( 0.25,  h,-0.25);
+	glVertex3d(-0.25,  h,-0.25);
+	glVertex3d(-0.25,  h, 0.25);
+
+	glNormal3d( 0.0,-1.0, 0.0);			// bottom (-y)
+	glVertex3d( 0.25,0.0, 0.25);
+	glVertex3d(-0.25,0.0, 0.25);
+	glVertex3d(-0.25,0.0,-0.25);
+	glVertex3d( 0.25,0.0,-0.25);
+
+	glEnd();
+}
 
 ///////////// class Light ///////////////
 Light::Light(const char* name, GLuint lightNumber,
