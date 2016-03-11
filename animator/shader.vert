@@ -7,6 +7,7 @@
 varying vec3 N;
 varying vec3 v;
 
+
 void main()
 {
 	// The eye is sitting at the origin in eye space.  After
@@ -16,6 +17,13 @@ void main()
 	// vertex location to be interpolated across the triangle and
 	// then used to compute viewing and lighting directions.
 	v = vec3(gl_ModelViewMatrix * gl_Vertex);
+
+
+	
+
+	// vec3 Light = normalize(gl_LightSource[1].position - v);
+
+	// vec3 Viewer = -normalize(v);
 
 	// Need to transform the normal into eye space.
 	N = normalize(gl_NormalMatrix * gl_Normal);

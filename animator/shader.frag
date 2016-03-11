@@ -43,8 +43,49 @@ void main()
 	vec4 specular = specularShade * gl_FrontLightProduct[0].specular;
 	ambient += gl_FrontLightProduct[0].ambient;
 
+
+
+	vec3 P_Light = normalize(gl_LightSource[1].position.xyz - v);
+	vec3 P_Half = normalize( Viewer + P_Light);
+
+	float P_B = 1.0;
+	if(dot(Normal, P_Light)<0.0) P_B = 0.0;
+
+	float P_diffuseShade = max(dot(Normal, P_Light), 0.0);
+	float P_specularShade = P_B * pow(max(dot(P_Half, Normal), 0.0), gl_FrontMaterial.shininess);
+
+	float dist = sqrt(pow(P_Light[0], 2.0) + pow(P_Light[1], 2.0) + pow(P_Light[2], 2.0));
+	P_diffuseShade /= gl_LightSource[1].quadraticAttenuation * (dist * dist) + gl_LightSource[1].linearAttenuation * dist + gl_LightSource[1].constantAttenuation;
+	
+
+    
+
+	
+	vec4 spec = P_specularShade * gl_FrontLightProduct[1].specular;
+
+
+	vec4 addition = max(P_diffuseShade * gl_FrontLightProduct[1].diffuse + spec, gl_FrontLightProduct[1].ambient);
+	
+	diffuse += addition;
+	
+
+
+	// if(P_diffuseShade > 0.0){
+		
+	// 	float intSpec = max(dot(P_Half, Normal), 0.0);
+	// 	P_diffuseShade /= gl_LightSource[1].quadraticAttenuation * (dist * dist) + gl_LightSource[1].linearAttenuation * dist + gl_LightSource[1].constantAttenuation;
+	// 	P_specularShade = specular * pow(intSpec, gl_FrontMaterial.shininess);
+
+	// 	diffuse += P_diffuseShade * gl_FrontLightProduct[1].diffuse;
+	// 	specular += P_specularShade * gl_FrontLightProduct[1].specular;
+	// 	ambient += gl_FrontLightProduct[1].ambient;
+
+	// }
+
+
 	// Assign final color
 	gl_FragColor = ambient + diffuse + specular + gl_FrontMaterial.emission;
+	
 	// Scale with brightness value
 	gl_FragColor = gl_FragColor * brightness;
 }

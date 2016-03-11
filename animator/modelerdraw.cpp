@@ -583,8 +583,8 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 	_setupOpenGl();
 	const float PI = 3.141592653589793238462643383279502f;
 	float origin_x = 0.0;
-	float origin_y = 1.13132490911795f;
-		float origin_z = -3.0f;
+	float origin_y = 0.35f;
+	float origin_z = -3.0f;
 
 	// cout << "THIS IS CALLED" << endl;
 	// YOUR DRAW REVOLUTION CODE HERE
@@ -599,9 +599,6 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 	for(int i = 0; i < divisions ; i++){
 		for(int j = 0; j < num_pts - 1 ; j++){
 			float rotation = (2 * PI * i)/divisions;
-			// float p_x = rotation * revolution_pts[j].x * scale;
-			// float p_y = i + origin_y;
-			// float p_z = rotation * revolution_pts[j].y * scale;
 
 			float p1_x = revolution_pts[j + 1].x * cos(rotation);
 			float p1_y = origin_y + revolution_pts[j + 1].y;
@@ -610,8 +607,6 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 			float p2_x = revolution_pts[j].x * cos(rotation);
 			float p2_y = origin_y + revolution_pts[j].y;
 			float p2_z = revolution_pts[j].x * sin(rotation);
-
-			
 
 			rotation = (2 * PI * (i + 1))/divisions;
 
@@ -622,8 +617,6 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 			float p4_x = revolution_pts[j + 1].x * cos(rotation);
 			float p4_y = origin_y + revolution_pts[j + 1].y;
 			float p4_z = revolution_pts[j + 1].x * sin(rotation);
-
-			
 
 			Vec3f T1 = Vec3f(revolution_pts[ j + 2 ].x - revolution_pts[ j + 1 ].x, revolution_pts[ j + 2 ].y - revolution_pts[ j + 1].y, 0.0);
 			Vec3f T2 = Vec3f(0.0, 0.0, 1.0);
@@ -659,14 +652,10 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 				}
 
 				else {
-					// float distance = abs(revolution_pts[k].y - revolution_pts[ k - 1 ].y); //distance
 					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
-					// distance.normalize();
 
 					nominator += distance;
 				}
-				
-
 			}
 
 			float denominator = 0;
@@ -677,7 +666,6 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 				}
 				else {
 					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
-					// distance.normalize();
 
 					denominator += distance;
 				}
@@ -696,7 +684,6 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 
 				else {
 					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
-					// distance.normalize();
 
 					nominator += distance;
 				}
@@ -718,7 +705,6 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 
 				else {
 					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
-					// distance.normalize();
 
 					nominator += distance;
 				}
@@ -758,8 +744,6 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			glEnableClientState(GL_COLOR_ARRAY);
 			glEnableClientState(GL_VERTEX_ARRAY);
-
-
 			
 			glNormalPointer( GL_FLOAT, 0, normals);
 			glTexCoordPointer(2, GL_FLOAT, 0, textures);
