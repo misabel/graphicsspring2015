@@ -269,6 +269,7 @@ protected:
 
 ///////////////////////////////// SHADERS /////////////////////////////////////
 	ShaderProgram shader;
+	ShaderProgram toonShader;
 
 //////////////////////////////// PROPERTIES ///////////////////////////////////
 	// Switches for spheres
@@ -280,6 +281,7 @@ protected:
 	ChoiceProperty shapeChoice;
 
 	BooleanProperty useShader;
+	BooleanProperty useToonShader;
 
 	// Some slider properties
 	RangeProperty rotateX, rotateY;
@@ -319,6 +321,8 @@ public:
 		texture("checkers.png"),
 		shader("shader.vert", "shader.frag", NULL),
 
+		toonShader("toonShader.vert", "toonShader.frag", NULL),
+
 		// Call the constructors for the lights
 		pointLight("Point Light", GL_LIGHT1, /**direction part**/ -5, 5, 5, /**diffuse part**/ 1.0, 0.5, 0.5, 
 		/**specular part**/ 1.0, 0.5, 0.5, /**ambient part**/ .2f, 0.1, 0.1 /**attenuation part**/, 0.4, 0.7, 0),
@@ -330,6 +334,7 @@ public:
 		showReferenceUnitSphere("Show Reference Unit Sphere", false),
 		shapeChoice("Model Shape:", "Sphere|Cube|Cylinder|Torus|Icosahedron|Teapot|Revolution|My Model", 0), //557 animator UI allows shapes + Model
 		useShader("Use My Shader", true),
+		useToonShader("Use Cartoon Shader", false),
 		rotateX("Rotate Basic Shape X", -180, 180, 0, 1),
 		rotateY("Rotate Basic Shape Y", -180, 180, 0, 1),
 		brightness("Brightness", 0.0f, 1.0f, 1.0f, 0.1f),
@@ -361,6 +366,7 @@ public:
 		properties.add(&showReferenceUnitSphere)
 				  .add(&shapeChoice);
 		properties.add(&useShader)
+				.add(&useToonShader)
 				.add(&rotateX)
 				.add(&rotateY);
 		properties.add(&sphereCenterX)
@@ -384,6 +390,7 @@ public:
 	void load() {
 		texture.load();
 		shader.load();
+		toonShader.load();
 	}
 
 	/**
@@ -522,6 +529,7 @@ public:
 
 		// Use the texture if desired.
 		if (useTexture.getValue()) {
+
 			texture.use();
 		} else {
 			glBindTexture(GL_TEXTURE_2D, 0);
@@ -529,7 +537,19 @@ public:
 
 		// Use the shader if desired.
 		if (useShader.getValue()) {
+			// useToonShader.setValue(false);
 			shader.use();
+			// glGetUniformLocation gets the memory location of a variable with the given char* name, in this case "brightness"
+			// for the given shader program, identified by its ID.
+			GLint brightnessVariableLocation = glGetUniformLocation( shader.getID(), "brightness" );
+			// glUniform1f sets the value of a particular uniform variable location with a single float value (hence the suffix "1f")
+			glUniform1f(brightnessVariableLocation, brightness.getValue());
+
+		}
+		else if(useToonShader.getValue()){
+			useShader.setValue(false);
+			toonShader.use();
+
 			// glGetUniformLocation gets the memory location of a variable with the given char* name, in this case "brightness"
 			// for the given shader program, identified by its ID.
 			GLint brightnessVariableLocation = glGetUniformLocation( shader.getID(), "brightness" );

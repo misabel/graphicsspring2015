@@ -208,6 +208,12 @@
     <CustomBuildStep Include="shader.vert">
       <Filter>Source Files\Scene</Filter>
     </CustomBuildStep>
+    <CustomBuildStep Include="toonShader.frag">
+      <Filter>Source Files\Scene</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="toonShader.vert">
+      <Filter>Source Files\Scene</Filter>
+    </CustomBuildStep>
     <CustomBuildStep Include="beziercurveevaluator.h">
       <Filter>Header Files\Curves</Filter>
     </CustomBuildStep>
