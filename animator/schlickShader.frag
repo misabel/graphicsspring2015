@@ -7,29 +7,33 @@ uniform float N2;
 uniform float brightness;
 void main()
 {
-
+	vec4 ambient = gl_LightModel.ambient * gl_FrontMaterial.ambient;
 	float roughness = 0.3; // fresnel reflectance at normal incidence
 	float F0 = pow(((N1 - N2) / (N1 + N2)), 2.0);
 	float k = 0.2; // fraction of diffuse reflection
 
-	vec3 lightColor = vec3(0.9, 0.1, 0.1);
+	// vec3 lightColor = vec3(0.9, 0.1, 0.1);
 
-	vec3 normal = normalize(N);
+	vec3 Viewer = -normalize(v);
 
 	vec3 lightDir  = normalize(gl_LightSource[0].position.xyz);
 
-	float NdotL = max(dot(normal, lightDir), 0.0);
+	// Compute halfway vector
+	// vec3 Half = normalize(Viewer+Light);
+
+
+	float diffuseShade = max(dot(N, lightDir), 0.0);
 
 	float specular = 0.0;
 
-	if(NdotL > 0.0)
+	if(diffuseShade > 0.0)
 	{
 		vec3 Viewer = -normalize(v);
 
 		vec3 H = normalize(lightDir + Viewer);
 
-		float NdotH = max(dot(normal, H), 0.0);
-		float NdotV = max(dot(normal, Viewer), 0.0);
+		float NdotH = max(dot(N, H), 0.0);
+		float NdotV = max(dot(N, Viewer), 0.0);
 
 		float VdotH = max(dot(Viewer, H), 0.0);
 
@@ -37,7 +41,7 @@ void main()
 
 		float NH2 = 2.0 * NdotH;
 		float g1 = (NH2 * NdotV) / VdotH;
-		float g2 = (NH2 * NdotL) / VdotH;
+		float g2 = (NH2 * diffuseShade) / VdotH;
 		float atten = min(1.0, min(g1, g2));
 
 		float r1 = 1.0 / (4.0 * mSquared * pow(NdotH, 4.0));
@@ -46,9 +50,12 @@ void main()
 
 		float fresnel = F0 + (1.0 - F0) * pow(1.0 - NdotV, 5.0);
 
-		specular = (fresnel * atten * rough) / (NdotV * NdotL * 3.14);
+		specular = (fresnel * atten * rough) / (NdotV * diffuseShade * 3.14);
 	}
 
-	vec4 final = (gl_LightSource[0].specular + gl_LightSource[0].ambient + gl_LightSource[0].diffuse) * NdotL * (k + specular * (1.0 - k));
+	vec4 diffuse = diffuseShade * gl_FrontLightProduct[0].diffuse;
+	ambient += gl_FrontLightProduct[0].ambient;
+
+	vec4 final = (gl_FrontLightProduct[0].specular + ambient + diffuse) * diffuseShade * (k + specular * (1.0 - k));
 	gl_FragColor = final * brightness;
 }
