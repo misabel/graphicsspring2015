@@ -4,6 +4,7 @@ varying vec3 v;
 
 uniform float N1;
 uniform float N2;
+uniform float brightness;
 void main()
 {
 
@@ -49,5 +50,5 @@ void main()
 	}
 
 	vec4 final = (gl_LightSource[0].specular + gl_LightSource[0].ambient + gl_LightSource[0].diffuse) * NdotL * (k + specular * (1.0 - k));
-	gl_FragColor = final;
+	gl_FragColor = final * brightness;
 }

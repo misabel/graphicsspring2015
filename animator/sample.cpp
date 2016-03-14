@@ -572,10 +572,14 @@ public:
 
 		else if(useSchlickShader.getValue()){
 
+			shader.use();
 			schlickShader.use();
 
+			GLint brightnessVariableLocation = glGetUniformLocation( schlickShader.getID(), "brightness");
 			GLint N1VariableLocation = glGetUniformLocation( schlickShader.getID(), "N1");
 			GLint N2VariableLocation = glGetUniformLocation( schlickShader.getID(), "N2");
+
+			glUniform1f(brightnessVariableLocation, brightness.getValue());
 			glUniform1f(N1VariableLocation, N1.getValue());
 			glUniform1f(N2VariableLocation, N2.getValue());
 		}
