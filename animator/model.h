@@ -4,7 +4,7 @@
 #include <cmath>
 #include "vec.h"
 #include "properties.h"
-#include "ParticleSystem.h"
+#include "particleSystem.h"
 
 /** Forward-declare ICamera because it's used in Model yet is a Model. */
 class ICamera;
