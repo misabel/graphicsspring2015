@@ -270,6 +270,7 @@ protected:
 ///////////////////////////////// SHADERS /////////////////////////////////////
 	ShaderProgram shader;
 	ShaderProgram toonShader;
+	ShaderProgram schlickShader;
 
 //////////////////////////////// PROPERTIES ///////////////////////////////////
 	// Switches for spheres
@@ -282,6 +283,7 @@ protected:
 
 	BooleanProperty useShader;
 	BooleanProperty useToonShader;
+	BooleanProperty useSchlickShader;
 
 	// Some slider properties
 	RangeProperty rotateX, rotateY;
@@ -322,6 +324,7 @@ public:
 		shader("shader.vert", "shader.frag", NULL),
 
 		toonShader("toonShader.vert", "toonShader.frag", NULL),
+		schlickShader("schlickShader.vert", "schlickShader.frag", NULL),
 
 		// Call the constructors for the lights
 		pointLight("Point Light", GL_LIGHT1, /**direction part**/ -5, 5, 5, /**diffuse part**/ 1.0, 0.5, 0.5, 
@@ -335,6 +338,7 @@ public:
 		shapeChoice("Model Shape:", "Sphere|Cube|Cylinder|Torus|Icosahedron|Teapot|Revolution|My Model", 0), //557 animator UI allows shapes + Model
 		useShader("Use My Shader", true),
 		useToonShader("Use Cartoon Shader", false),
+		useSchlickShader("Use Schlick Shader", false),
 		rotateX("Rotate Basic Shape X", -180, 180, 0, 1),
 		rotateY("Rotate Basic Shape Y", -180, 180, 0, 1),
 		brightness("Brightness", 0.0f, 1.0f, 1.0f, 0.1f),
@@ -367,6 +371,7 @@ public:
 				  .add(&shapeChoice);
 		properties.add(&useShader)
 				.add(&useToonShader)
+				.add(&useSchlickShader)
 				.add(&rotateX)
 				.add(&rotateY);
 		properties.add(&sphereCenterX)
@@ -391,6 +396,7 @@ public:
 		texture.load();
 		shader.load();
 		toonShader.load();
+		schlickShader.load();
 	}
 
 	/**

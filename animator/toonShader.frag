@@ -42,6 +42,6 @@ void main()
 		// color = vec4(mat_color[0] * 0.2, mat_color[0] * 0.2, mat_color[0] * 0.2, mat_color[3]);
 		// spec = gl_FrontLightProduct[0].specular * vec4(0.2, 0.2, 0.2, 1.0) * pow(intSpec, gl_FrontMaterial.shininess);
 
-	gl_FragColor = color;
+	gl_FragColor = color * (gl_LightSource[0].diffuse + gl_LightSource[0].ambient + gl_LightSource[0].specular);
 	// gl_FragColor = max(intensity * gl_FrontLightProduct[0].diffuse + spec, gl_FrontLightProduct[0].ambient);
 }
