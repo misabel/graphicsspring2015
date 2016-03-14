@@ -288,6 +288,8 @@ protected:
 	// Some slider properties
 	RangeProperty rotateX, rotateY;
 	RangeProperty brightness;
+	RangeProperty N1;
+	RangeProperty N2;
 
 	// Diffuse color picker
 	RGBProperty diffuse;
@@ -342,6 +344,8 @@ public:
 		rotateX("Rotate Basic Shape X", -180, 180, 0, 1),
 		rotateY("Rotate Basic Shape Y", -180, 180, 0, 1),
 		brightness("Brightness", 0.0f, 1.0f, 1.0f, 0.1f),
+		N1("Schlick N1", 0.0f, 1.0f, 1.0f, 0.1f),
+		N2("Schlick N2", 0.0f, 1.0f, 1.0f, 0.1f),
 		diffuse("Diffuse Color", 1.0, 0.7, .4)
 		,
 		sphereCenterX("Collision Sphere Center (X)", -6.0, 6.0, -5.0, 0.1),
@@ -378,6 +382,8 @@ public:
 				.add(&sphereCenterY)
 				.add(&sphereCenterZ);
 		properties.add(&brightness)
+				  .add(&N1)
+				  .add(&N2)
 				  .add(&diffuse)
 				  ;
 	}
@@ -558,10 +564,20 @@ public:
 
 			// glGetUniformLocation gets the memory location of a variable with the given char* name, in this case "brightness"
 			// for the given shader program, identified by its ID.
-			GLint brightnessVariableLocation = glGetUniformLocation( shader.getID(), "brightness" );
+			GLint brightnessVariableLocation = glGetUniformLocation( toonShader.getID(), "brightness" );
 			// glUniform1f sets the value of a particular uniform variable location with a single float value (hence the suffix "1f")
 			glUniform1f(brightnessVariableLocation, brightness.getValue());
 
+		}
+
+		else if(useSchlickShader.getValue()){
+
+			schlickShader.use();
+
+			GLint N1VariableLocation = glGetUniformLocation( schlickShader.getID(), "N1");
+			GLint N2VariableLocation = glGetUniformLocation( schlickShader.getID(), "N2");
+			glUniform1f(N1VariableLocation, N1.getValue());
+			glUniform1f(N2VariableLocation, N2.getValue());
 		}
 		else
 		{
