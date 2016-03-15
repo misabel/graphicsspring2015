@@ -30,7 +30,7 @@ CC = g++
 	$(CC) $(CFLAGS) $(INCLUDE) -c -o $*.o $<
 
 ALL.O = curve.o curveevaluator.o beziercurveevaluator.o catmullromcurveevaluator.o \
-	linearcurveevaluator.o camera.o graphwidget.o indicatorwindow.o \
+	bsplinecurveevaluator.o linearcurveevaluator.o camera.o graphwidget.o indicatorwindow.o \
 	modelerdraw.o modelerui.o modelerview.o imageio.o point.o rect.o vault.o vect.o cameras.o \
 	model.o particleSystem.o properties.o \
 	rijndael.o shaders.o trackball.o sample.o
