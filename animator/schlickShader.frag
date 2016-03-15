@@ -10,7 +10,7 @@ void main()
 	vec4 ambient = gl_LightModel.ambient * gl_FrontMaterial.ambient;
 	float roughness = 0.3; // fresnel reflectance at normal incidence
 	float F0 = pow(((N1 - N2) / (N1 + N2)), 2.0);
-	float k = 0.2; // fraction of diffuse reflection
+	float k = 0.5; // fraction of diffuse reflection
 
 	// vec3 lightColor = vec3(0.9, 0.1, 0.1);
 
@@ -53,9 +53,9 @@ void main()
 		specular = (fresnel * atten * rough) / (NdotV * diffuseShade * 3.14);
 	}
 
-	vec4 diffuse = diffuseShade * gl_FrontLightProduct[0].diffuse;
+	// vec4 diffuse = diffuseShade * gl_FrontLightProduct[0].diffuse;
 	ambient += gl_FrontLightProduct[0].ambient;
 
-	vec4 final = (gl_FrontLightProduct[0].specular + ambient + diffuse) * diffuseShade * (k + specular * (1.0 - k));
-	gl_FragColor = final * brightness;
+	vec4 final = (gl_FrontLightProduct[0].specular + ambient + gl_FrontLightProduct[0].diffuse) * diffuseShade * (k + specular * (1.0 - k));
+	gl_FragColor = final * brightness * brightness;
 }
