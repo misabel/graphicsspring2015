@@ -28,12 +28,10 @@ void BezierCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPts,
 	int last = 0;
 	ptvEvaluatedCurvePts.clear();
 
-	
-
-	while (last <= iCtrlPtCount - 1) 
+	while (last < iCtrlPtCount) 
 	{
 		// we need at least 4 control points to make a single bezier curve
-		if (last + 3 <= iCtrlPtCount - 1)
+		if (last + 3 < iCtrlPtCount)
 		{
 			// sampling from 0 to 1 by 0.01
 			for (float sample = 0; sample < 1; sample += 0.01)

@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "modelerdraw.h"
 #include "FL/glut.H"
+#include "force.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ ParticleSystem* Model::getParticleSystem() {
 };
 
 /////////////class MyModel ///////////////////
+void ground(float h);
 void head_rotation(float h);
 void body(float h);
 void left_upper_arm(float h);
@@ -28,6 +30,7 @@ void left_lower_leg(float h);
 void right_upper_leg(float h);
 void right_lower_leg(float h);
 void y_box(float h);
+void mass_change(float h);
 
 MyModel::MyModel() :
   	Model("Robot"),
@@ -39,7 +42,8 @@ MyModel::MyModel() :
   	leftUpperLegTilt("Left upper leg tilt", 90, 250, 180, 1),
   	leftLowerLegTilt("Left lower leg tilt", 0, 95, 0, 1),
   	rightUpperLegTilt("Right upper leg tilt", 90, 250, 180, 1),
-  	rightLowerLegTilt("Right lower leg tilt", 0, 95, 0, 1)
+  	rightLowerLegTilt("Right lower leg tilt", 0, 95, 0, 1),
+  	mass("Mass", 1, 10, 3, 0.5)
   {
   	properties.add(&headRotation)
 			  .add(&leftUpperArmTilt)
@@ -50,11 +54,28 @@ MyModel::MyModel() :
 			  .add(&leftLowerLegTilt)
 			  .add(&rightUpperLegTilt)
 			  .add(&rightLowerLegTilt)
-			  .add(&ps.restitution);
+			  .add(&ps.restitution)
+			  .add(&mass);
 
   }
 
 void MyModel::draw() {
+
+	/*glPushMatrix();
+
+		glPushMatrix();
+			glTranslatef(0, 4, 0);
+			drawSphere(.5);
+		glPopMatrix();
+
+		setDiffuseColor(0.65,0.45,0.2);
+		setAmbientColor(0.65,0.45,0.2);
+		glPushMatrix();
+			glScalef(30,0,30);
+			y_box(1);
+		glPopMatrix();
+
+	glPopMatrix();*/
 
 	/* pick up the slider values */
 	float hr = headRotation.getValue();
@@ -71,6 +92,8 @@ void MyModel::draw() {
 
 	// define the model
 	glPushMatrix();
+
+		//ground(-0.2);
 
 		// Head
 		glPushMatrix();
@@ -130,6 +153,17 @@ void MyModel::draw() {
 	glPopMatrix();
 }
 
+void ground(float h) 
+{
+	setDiffuseColor(0.65,0.45,0.2);
+	setAmbientColor(0.65,0.45,0.2);
+	glPushMatrix();
+		glScalef(30,0,30);
+		y_box(h);
+	glPopMatrix();
+
+}
+
 void head_rotation(float h) {
 	setDiffuseColor( 0.85, 0.75, 0.25 );
 	setAmbientColor( 0.95, 0.75, 0.25 );
@@ -146,7 +180,6 @@ void head_rotation(float h) {
 
 				setDiffuseColor(0.75, 0.75, 0.75);
 				setAmbientColor( 0.15, 0.15, 0.65 );
-				//glTranslatef(0, 0, 0);
 				drawCylinder(0.2, 0.2, 0.2);
 
 		glPopMatrix();

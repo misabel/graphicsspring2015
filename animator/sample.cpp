@@ -364,12 +364,6 @@ public:
 
 		// Finally, add all the properties to this model's PropertyGroup.
 		properties.add(&useTexture)
-				  //.add(&showReferenceUnitSphere)
-				  //.add(&shapeChoice)
-				  //.add(&useShader)
-				  //.add(&rotateX)
-				  //.add(&rotateY)
-				  //.add(&diffuse)
 				  ;
 		properties.add(&showReferenceUnitSphere)
 				  .add(&shapeChoice);
@@ -478,6 +472,7 @@ public:
 				glPopMatrix();
 				//robotArm.draw();
 				myModel.draw();
+
 				break;
 				
 			}
