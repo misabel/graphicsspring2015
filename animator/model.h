@@ -69,7 +69,7 @@ class MyModel : public Model {
 protected:
   RangeProperty headRotation, leftUpperArmTilt, leftLowerArmTilt, rightUpperArmTilt,
   				rightLowerArmTilt, leftUpperLegTilt, leftLowerLegTilt, rightUpperLegTilt,
-  				rightLowerLegTilt;
+  				rightLowerLegTilt, mass;
 
 public:
   MyModel();

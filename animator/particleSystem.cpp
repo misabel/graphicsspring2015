@@ -2,6 +2,8 @@
 
 #include "particleSystem.h"
 #include "modelerui.h"
+#include "force.h"
+#include "particle.h"
 
 
 #include <cstdio>
@@ -20,15 +22,16 @@ static float prevT;
 
 ParticleSystem::ParticleSystem() : restitution("Restitution", 0.0f, 2.0f, 1.0f, 0.1f)
 {
-	// YOUR CODE HERE
+	//Gravity G = new Gravity();
 
+	bake_fps = 0;
+	bake_start_time = 0;
+	bake_end_time = 0;
 
 	// Leave these here; the UI needs them to work correctly.
 	dirty = false;
 	simulate = false;
 }
-
-
 
 
 /*************
@@ -37,7 +40,7 @@ ParticleSystem::ParticleSystem() : restitution("Restitution", 0.0f, 2.0f, 1.0f, 
 
 ParticleSystem::~ParticleSystem() 
 {
-	// TODO
+
 }
 
 
@@ -48,7 +51,7 @@ ParticleSystem::~ParticleSystem()
 /** Start the simulation */
 void ParticleSystem::startSimulation(float t)
 {
-	// YOUR CODE HERE
+	bake_start_time = 0;
 
 	// These values are used by the UI ...
 	// negative bake_end_time indicates that simulation
@@ -65,8 +68,6 @@ void ParticleSystem::startSimulation(float t)
 /** Stop the simulation */
 void ParticleSystem::stopSimulation(float t)
 {
-	// YOUR CODE HERE
-
 	// These values are used by the UI
 	simulate = false;
 	dirty = true;
@@ -76,7 +77,7 @@ void ParticleSystem::stopSimulation(float t)
 /** Reset the simulation */
 void ParticleSystem::resetSimulation(float t)
 {
-	// YOUR CODE HERE
+	bake_start_time = 0;
 
 	// These values are used by the UI
 	simulate = false;
@@ -87,13 +88,32 @@ void ParticleSystem::resetSimulation(float t)
 /** Compute forces and update particles **/
 void ParticleSystem::computeForcesAndUpdateParticles(float t)
 {
-	// YOUR CODE HERE
+	if (simulate){
+
+		const float deltaT = 0.0025;
+
+		for (auto &particle : _Particles) {
+			Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
+			Vec3f velocity = particle->getVelocity();
+			Vec3f position = particle->getPosition();
+
+			for(auto &f : _Forces){
+				force += f->getForce()*particle->getMass();
+			}
+
+			velocity += force / particle->getMass() * deltaT;
+			position += velocity * deltaT;
+			particle->setVelocity(velocity);
+			particle->setPosition(position);
+		}
+	
+	}
 	
 
 	// Debugging info
 	/*if( t - prevT > .08 )
 		printf("(!!) Dropped Frame %lf (!!)\n", t-prevT);*/
-	prevT = t;
+	//prevT = t;
 }
 
 
@@ -101,6 +121,11 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 void ParticleSystem::drawParticles(float t)
 {
 	// YOUR CODE HERE
+	if (simulate) {
+		for (vector<Particle*>::iterator it = particles[t].begin(); it != particles[t].end(); it++) {
+			(*it)->Draw();
+		}
+	}
 }
 
 
@@ -111,14 +136,15 @@ void ParticleSystem::drawParticles(float t)
 void ParticleSystem::bakeParticles(float t) 
 {
 	// TODO (baking is extra credit)
+
 }
 
 /** Clears out your data structure of baked particles */
 void ParticleSystem::clearBaked()
 {
 	// TODO (baking is extra credit)
-}
 
+}
 
 
 

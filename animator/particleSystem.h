@@ -26,6 +26,12 @@
 #include "vec.h"
 #include "properties.h"
 #include <vector>
+#include "force.h"
+#include "particle.h"
+#include <map>
+
+using namespace std;
+
 
 class ParticleSystem {
 public:
@@ -76,6 +82,8 @@ public:
 	bool isDirty() { return dirty; }
 	void setDirty(bool d) { dirty = d; }
 
+	void addParticle(Particle* p) { _Particles.push_back(p); }
+	void addForce(Force* f){ _Forces.push_back(f); }
 
 protected:
 	
@@ -91,7 +99,10 @@ protected:
 	bool simulate;						// flag for simulation mode
 	bool dirty;							// flag for updating ui (don't worry about this)
 
+	vector<Particle*> _Particles;
+	vector<Force*> _Forces;
+	map<int, std::vector<Particle*>> particles;
 };
 
 
-#endif	// __PARTICLE_SYSTEM_H__
+#endif __PARTICLE_SYSTEM_H__
