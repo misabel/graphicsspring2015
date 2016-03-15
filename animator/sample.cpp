@@ -271,6 +271,7 @@ protected:
 	ShaderProgram shader;
 	ShaderProgram toonShader;
 	ShaderProgram schlickShader;
+	ShaderProgram textShader;
 
 //////////////////////////////// PROPERTIES ///////////////////////////////////
 	// Switches for spheres
@@ -284,6 +285,7 @@ protected:
 	BooleanProperty useShader;
 	BooleanProperty useToonShader;
 	BooleanProperty useSchlickShader;
+	BooleanProperty useTextShader;
 
 	// Some slider properties
 	RangeProperty rotateX, rotateY;
@@ -327,6 +329,7 @@ public:
 
 		toonShader("toonShader.vert", "toonShader.frag", NULL),
 		schlickShader("schlickShader.vert", "schlickShader.frag", NULL),
+		textShader("textShader.vert", "textShader.frag", NULL),
 
 		// Call the constructors for the lights
 		pointLight("Point Light", GL_LIGHT1, /**direction part**/ -5, 5, 5, /**diffuse part**/ 1.0, 0.5, 0.5, 
@@ -341,6 +344,7 @@ public:
 		useShader("Use My Shader", true),
 		useToonShader("Use Cartoon Shader", false),
 		useSchlickShader("Use Schlick Shader", false),
+		useTextShader("Use Texture Blinn Phong Shader", false),
 		rotateX("Rotate Basic Shape X", -180, 180, 0, 1),
 		rotateY("Rotate Basic Shape Y", -180, 180, 0, 1),
 		brightness("Brightness", 0.0f, 1.0f, 1.0f, 0.1f),
@@ -370,6 +374,7 @@ public:
 		properties.add(&useShader)
 				.add(&useToonShader)
 				.add(&useSchlickShader)
+				.add(&useTextShader)
 				.add(&rotateX)
 				.add(&rotateY);
 		properties.add(&sphereCenterX)
@@ -397,6 +402,7 @@ public:
 		shader.load();
 		toonShader.load();
 		schlickShader.load();
+		textShader.load();
 	}
 
 	/**
@@ -544,6 +550,7 @@ public:
 
 		// Use the shader if desired.
 		if (useShader.getValue()) {
+			glUseProgram(0);
 			// useToonShader.setValue(false);
 			shader.use();
 			// glGetUniformLocation gets the memory location of a variable with the given char* name, in this case "brightness"
@@ -554,6 +561,7 @@ public:
 
 		}
 		else if(useToonShader.getValue()){
+			glUseProgram(0);
 			useShader.setValue(false);
 			toonShader.use();
 
@@ -566,7 +574,7 @@ public:
 		}
 
 		else if(useSchlickShader.getValue()){
-
+			glUseProgram(0);
 			shader.use();
 			schlickShader.use();
 
@@ -577,6 +585,12 @@ public:
 			glUniform1f(brightnessVariableLocation, brightness.getValue());
 			glUniform1f(N1VariableLocation, N1.getValue());
 			glUniform1f(N2VariableLocation, N2.getValue());
+		}
+
+		else if(useTextShader.getValue()){
+			glUseProgram(0);
+
+			textShader.use();
 		}
 		else
 		{
