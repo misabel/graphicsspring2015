@@ -35,7 +35,7 @@ ParticleSystem::ParticleSystem() : restitution("Restitution", 0.0f, 2.0f, 1.0f, 
 	// Leave these here; the UI needs them to work correctly.
 	dirty = false;
 	simulate = false;
-	spawnPoint = Vec3f(0.0);
+	spawnPoint = Vec3f(30.0);
 }
 
 
@@ -98,10 +98,11 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 	if (simulate){
 		const float deltaT = t - prevT;
 		prevT = t;
+		float k = 0.001;
 
 		for (auto &particle : _Particles) {
 			Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
-			// Vec3f position = particle->getPosition();
+			Vec3f position = particle->getPosition();
 			Vec3f velocity = particle->getVelocity();
 			float mass = particle->getMass();
 
@@ -111,6 +112,21 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 			Force::randomizeK();
 
 			particle->derivEval(deltaT, force);
+
+			// Plane Collision detection 
+			Vec3f N = Vec3f(0, 1, 0);
+			if(position[1] < 0 && velocity * N < 0) {
+				Vec3f vn;
+				Vec3f vt;
+				vn = (N * velocity) * N;
+				vt = velocity-vn;
+				velocity = vt - k * vn;
+
+				particle->setVelocity(Vec3f(velocity[0], -velocity[1], velocity[2]));
+			}
+
+				/*Vec3f N = Vec3f(0, 1, 1);
+				if(i)*/
 
 			// Vec3f new_position = velocity;
 			// Vec3f new_velocity = force / mass;
@@ -194,6 +210,7 @@ void ParticleSystem::clearBaked()
 void ParticleSystem::addParticleStartingAt(Vec4f WorldPoint){
 	// cout << "spawn point is: "<< WorldPoint[0] << ", " << WorldPoint[1] << ", " << WorldPoint[2] << endl;
 	spawnPoint = Vec3f(WorldPoint);
+	cout << "spawning at "<< spawnPoint[0] << ", " << spawnPoint[1] << ", " << spawnPoint[2] << endl;
 }
 
 

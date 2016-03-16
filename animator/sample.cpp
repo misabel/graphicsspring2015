@@ -245,7 +245,7 @@ public:
 				glPopMatrix();
 				glPushMatrix();
 				glTranslatef(sphereCenterX.getValue(), sphereCenterY.getValue(), sphereCenterZ.getValue());
-				glutSolidSphere(1.0, 20, 20); // the 20's are arbitary
+				glutSolidSphere(.5, 20, 20); // the 20's are arbitary
 				glPopMatrix();
 				//robotArm.draw();
 				myModel.draw();

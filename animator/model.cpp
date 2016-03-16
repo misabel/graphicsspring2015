@@ -98,8 +98,6 @@ void MyModel::draw() {
 	// define the model
 	glPushMatrix();
 
-		// ground(-0.2);
-
 		// Head
 		glPushMatrix();
 			glTranslatef(0, 3.0, 0);
@@ -158,6 +156,9 @@ void MyModel::draw() {
 			right_lower_leg(1.1);
 		glPopMatrix();
 
+		glTranslatef(0, -0.85, 0);
+		ground(0.2);
+
 	glPopMatrix();
 }
 
@@ -177,7 +178,8 @@ void MyModel::SpawnParticles(Mat4f CameraTransforms)
 {
 	Mat4f WorldMatrix = CameraTransforms.inverse() * (CameraTransforms * glGetModelViewMatrix());
 
-	Vec4f WorldPoint = WorldMatrix * Vec4f(0.0, 0.0, 0.0, 1.0);
+	Vec4f WorldPoint = WorldMatrix * Vec4f(0.0, 0.0, 0.0, 1.0) + Vec4f(30.0, 30.0, 30.0, 30.0);
+	//cout << "spawning at "<< spawnPoint[0] << ", " << spawnPoint[1] << ", " << spawnPoint[2] << endl;
 
 	ps->addParticleStartingAt(WorldPoint);
 
@@ -185,8 +187,8 @@ void MyModel::SpawnParticles(Mat4f CameraTransforms)
 
 void ground(float h) 
 {
-	setDiffuseColor(0.65,0.45,0.2);
-	setAmbientColor(0.65,0.45,0.2);
+	setDiffuseColor(0.6,0.4,0.45);
+	setAmbientColor(0.6,0.4,0.45);
 	glPushMatrix();
 		glScalef(30,0,30);
 		y_box(h);

@@ -97,7 +97,7 @@ void Particle::Draw()
 
 		glPushMatrix();
 			glTranslatef(_position[0], _position[1], _position[2]);
-			drawSphere(.15);
+			drawSphere(.10);
 		glPopMatrix();
 
 		// setDiffuseColor(0.65,0.45,0.2);

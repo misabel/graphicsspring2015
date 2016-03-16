@@ -84,7 +84,7 @@ public:
 
 	void addParticle() { 
 		
-		_Particles.push_back(new Particle(spawnPoint)); 
+		_Particles.push_back(new Particle(Vec3f(float(rand() % 160 + -80) / 10.0,6.0,float(rand() % 160 + -80) / 10.0))); 
 	}
 
 	void addParticleStartingAt(Vec4f WorldPoint);
@@ -105,7 +105,7 @@ protected:
 	bool dirty;							// flag for updating ui (don't worry about this)
 
 	vector<Particle*> _Particles;
-	Vec3f spawnPoint;
+	Vec3f spawnPoint = Vec3f(30.0,30.0,30.0);
 	// map<int, std::vector<Particle*>> particles;
 };
 
