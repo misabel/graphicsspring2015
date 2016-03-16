@@ -336,14 +336,14 @@ public:
 				break;
 
 			case 1: // Cartoon Shader
-				useShader.setValue(false);
+				// useShader.setValue(false);
 				toonShader.use();
 				brightnessVariableLocation = glGetUniformLocation( toonShader.getID(), "brightness" );
 				glUniform1f(brightnessVariableLocation, brightness.getValue());
 				break;
 
 			case 2: // Schlick Shader
-				shader.use();
+				// shader.use();
 				schlickShader.use();
 
 				brightnessVariableLocation = glGetUniformLocation( schlickShader.getID(), "brightness");
