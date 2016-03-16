@@ -64,7 +64,7 @@ void CatmullRomCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPt
 
 		for (int i = 0; i < iCtrlPtCount - 1; i++) 
 		{
-			if(ptvCtrlPts[i + 1].x > ptvCtrlPts[i].x)
+			if(ptvCtrlPts[i + 1].x > ptvCtrlPts[i].x + 0.1)
 			{
 				points.clear();
 				// Duplicate first endpoint
