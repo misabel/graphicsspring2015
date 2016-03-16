@@ -138,5 +138,25 @@ public:
 	void draw();
 };
 
+/**
+ * A spotlight light.
+ */
+class SpotLight : public Light {
+public:
+	RangeProperty attenA, attenB, attenC;
+	RangeProperty spotX, spotY, spotZ;
+	RangeProperty cutoff, falloff;
+
+	SpotLight(const char* name, GLuint lightNumber,
+				float x = 0, float y = 0, float z = 0,
+				float dr = 1, float dg = 1, float db = 1,
+				float sr = 1, float sg = 1, float sb = 1,
+				float ar = .1, float ag = .1, float ab = .1,
+				float attA = .5, float attB = .7, float attC = 0,
+				float sX = 0, float sY = 0, float sZ = 0, 
+				float beta = 0, float alpha = 0);
+
+	void draw();
+};
 
 #endif // MODEL_H
