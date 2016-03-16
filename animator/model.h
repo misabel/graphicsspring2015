@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include "vec.h"
+#include "mat.h"
 #include "properties.h"
 #include "particleSystem.h"
 
@@ -26,6 +27,7 @@ protected:
 	 * method, so it can link controls to your properties.
 	 */
 	GroupProperty properties;
+	ParticleSystem* ps;
 
 public:
 	Model(const char* name);
@@ -60,13 +62,17 @@ public:
 	 * Override this method to return the particle system you want to control.
 	 */
 	virtual ParticleSystem* getParticleSystem();
+
+
+	
 };
 
 class MyModel : public Model {
 
-	 ParticleSystem ps;
+	 
 	 
 protected:
+	
   RangeProperty headRotation, leftUpperArmTilt, leftLowerArmTilt, rightUpperArmTilt,
   				rightLowerArmTilt, leftUpperLegTilt, leftLowerLegTilt, rightUpperLegTilt,
   				rightLowerLegTilt, mass;
@@ -74,6 +80,9 @@ protected:
 public:
   MyModel();
   void draw();
+  virtual Mat4f glGetModelViewMatrix();
+  virtual void SpawnParticles( Mat4f CameraTransforms );
+  virtual void left_lower_arm(float h, Mat4f CameraMatrix);
 
 };
 

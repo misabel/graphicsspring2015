@@ -1,8 +1,4 @@
 #include "force.h"
 
-
-Force::Force() {}
-
-Gravity::Gravity(float G) : _Gravity(G) {}
-
-ViscousDrag::ViscousDrag(float kDrag, Vec3f Dir) : _Drag(kDrag), _Velocity(Dir) {}
+Vec3f Force::g = Vec3f(0.0, -9.81, 0.0);
+float Force::k = 0.1;

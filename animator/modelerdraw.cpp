@@ -583,7 +583,7 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 	_setupOpenGl();
 	const float PI = 3.141592653589793238462643383279502f;
 	float origin_x = 0.0;
-	float origin_y = 0.35f;
+	float origin_y = 1.2f;
 	float origin_z = -3.0f;
 
 	// cout << "THIS IS CALLED" << endl;
@@ -596,9 +596,10 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 	
 	int num_pts = revolution_pts.size();
 
-	for(int i = 0; i < divisions ; i++){
+	for(int i = 0; i < divisions; i++){
 		for(int j = 0; j < num_pts - 1 ; j++){
 			float rotation = (2 * PI * i)/divisions;
+
 
 			float p1_x = revolution_pts[j + 1].x * cos(rotation);
 			float p1_y = origin_y + revolution_pts[j + 1].y;
@@ -608,7 +609,11 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 			float p2_y = origin_y + revolution_pts[j].y;
 			float p2_z = revolution_pts[j].x * sin(rotation);
 
-			rotation = (2 * PI * (i + 1))/divisions;
+			if(i != divisions)
+				rotation = (2 * PI * (i + 1))/divisions;
+			else
+				rotation = (2 * PI * (0.0))/divisions;
+
 
 			float p3_x = revolution_pts[j].x * cos(rotation);
 			float p3_y = origin_y + revolution_pts[j].y;
@@ -632,12 +637,20 @@ void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 			T1 = Vec3f(revolution_pts[ j + 1 ].x - revolution_pts[j].x, revolution_pts[ j + 1 ].y - revolution_pts[j].y, 0.0);
 			Vec3f n3 = T1 ^ T2;
 			n3.normalize();
-			n3 = ((2 * PI * (i + 1))/divisions) * n3;
+
+			if(i != divisions)
+				n3 = ((2 * PI * (i + 1))/divisions) * n3;
+			else
+				n3 = ((2 * PI * (0.0))/divisions) * n3;
 
 			T1 = Vec3f(revolution_pts[j + 2].x - revolution_pts[j + 1].x, revolution_pts[j+2].y - revolution_pts[j + 1].y, 0.0);
 			Vec3f n4 = T1 ^ T2;
 			n4.normalize();
-			n4 = ((2 * PI * (i + 1))/divisions) * n4;
+
+			if(i != divisions)
+				n4 = ((2 * PI * (i + 1))/divisions) * n4;
+			else
+				n4 = ((2 * PI * (0.0))/divisions) * n4;
 
 
 			float texture1_u = (float)i/divisions;

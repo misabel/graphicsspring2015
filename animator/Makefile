@@ -33,7 +33,8 @@ ALL.O = curve.o curveevaluator.o beziercurveevaluator.o catmullromcurveevaluator
 	linearcurveevaluator.o camera.o graphwidget.o indicatorwindow.o \
 	modelerdraw.o modelerui.o modelerview.o imageio.o point.o rect.o vault.o vect.o cameras.o \
 	model.o particleSystem.o properties.o \
-	rijndael.o shaders.o trackball.o sample.o
+	rijndael.o shaders.o trackball.o sample.o \
+	particle.o force.o
 
 modeler: $(ALL.O)
 	$(CC) $(CFLAGS) -o $@ $(ALL.O) $(INCLUDE) $(LIBDIR) $(LIBS)

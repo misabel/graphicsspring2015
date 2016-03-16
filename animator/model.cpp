@@ -3,18 +3,21 @@
 #include "modelerdraw.h"
 #include "FL/glut.H"
 #include "force.h"
+#include "mat.h"
 
 using namespace std;
 
 ///////////// class Model ///////////////
-Model::Model(const char* name) : properties(name) {}
+Model::Model(const char* name) : properties(name) {
+	ps = new ParticleSystem();
+}
 GroupProperty* Model::getProperties() { return &properties; }
 void Model::draw() {}
 void Model::tick() {}
 void Model::load() {}
 ICamera* Model::getCamera() { return NULL; }
 ParticleSystem* Model::getParticleSystem() { 
-	return NULL; 
+	return ps; 
 };
 
 /////////////class MyModel ///////////////////
@@ -22,7 +25,7 @@ void ground(float h);
 void head_rotation(float h);
 void body(float h);
 void left_upper_arm(float h);
-void left_lower_arm(float h);
+void left_lower_arm(float h, Mat4f CameraMatrix);
 void right_upper_arm(float h);
 void right_lower_arm(float h);
 void left_upper_leg(float h);
@@ -54,7 +57,7 @@ MyModel::MyModel() :
 			  .add(&leftLowerLegTilt)
 			  .add(&rightUpperLegTilt)
 			  .add(&rightLowerLegTilt)
-			  .add(&ps.restitution)
+			  .add(&ps->restitution)
 			  .add(&mass);
 
   }
@@ -77,6 +80,8 @@ void MyModel::draw() {
 
 	glPopMatrix();*/
 
+
+	Mat4f CameraMatrix = glGetModelViewMatrix();
 	/* pick up the slider values */
 	float hr = headRotation.getValue();
 	float lua = leftUpperArmTilt.getValue();
@@ -113,11 +118,14 @@ void MyModel::draw() {
 			glTranslatef(-1.2, 3.6, 0);
 			glRotatef(lua, 1, 0, 0);
 			left_upper_arm(1.2);
-
 			glTranslatef(0, 1.2, 0);
 			glRotatef(lla, 1, 0, 0);
-			left_lower_arm(0.9);
+
+			left_lower_arm(0.9, CameraMatrix);
+			
+
 		glPopMatrix();
+		
 
 		glPushMatrix();
 			glTranslatef(1.2, 3.6, 0);
@@ -126,7 +134,7 @@ void MyModel::draw() {
 
 			glTranslatef(0, 1.2, 0);
 			glRotatef(rla, 1, 0, 0);
-			left_lower_arm(0.9);
+			right_lower_arm(0.9);
 		glPopMatrix();
 
 		// Legs upper and lower, lower part is children of upper part
@@ -151,6 +159,28 @@ void MyModel::draw() {
 		glPopMatrix();
 
 	glPopMatrix();
+}
+
+Mat4f MyModel::glGetModelViewMatrix()
+{
+	GLfloat m[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, m);
+	Mat4f matMV = Mat4f(m[0], m[1], m[2], m[3],
+            m[4], m[5], m[6], m[7],
+            m[8], m[9], m[10], m[11],
+            m[12], m[13], m[14], m[15] );
+
+	return matMV.transpose();
+}
+
+void MyModel::SpawnParticles(Mat4f CameraTransforms)
+{
+	Mat4f WorldMatrix = CameraTransforms.inverse() * (CameraTransforms * glGetModelViewMatrix());
+
+	Vec4f WorldPoint = WorldMatrix * Vec4f(0.0, 0.0, 0.0, 1.0);
+
+	ps->addParticleStartingAt(WorldPoint);
+
 }
 
 void ground(float h) 
@@ -219,7 +249,7 @@ void left_upper_arm(float h) {
 	glPopMatrix();
 }
 
-void left_lower_arm(float h) {
+void MyModel::left_lower_arm(float h, Mat4f CameraMatrix) {
 	setDiffuseColor( 0.85, 0.75, 0.25 );
 	setAmbientColor( 0.95, 0.75, 0.25 );
 
@@ -230,6 +260,7 @@ void left_lower_arm(float h) {
 		glPushMatrix();
 			glScalef(0.4, h, 0.4);
 			y_box(1.0f);
+			SpawnParticles(CameraMatrix);
 		glPopMatrix();
 
 	glPopMatrix();

@@ -550,7 +550,7 @@ public:
 
 		// Use the shader if desired.
 		if (useShader.getValue()) {
-			glUseProgram(0);
+			// glUseProgram(0);
 			// useToonShader.setValue(false);
 			shader.use();
 			// glGetUniformLocation gets the memory location of a variable with the given char* name, in this case "brightness"
@@ -561,7 +561,7 @@ public:
 
 		}
 		else if(useToonShader.getValue()){
-			glUseProgram(0);
+			// glUseProgram(0);
 			useShader.setValue(false);
 			toonShader.use();
 
@@ -574,7 +574,7 @@ public:
 		}
 
 		else if(useSchlickShader.getValue()){
-			glUseProgram(0);
+			// glUseProgram(0);
 			shader.use();
 			schlickShader.use();
 
@@ -588,7 +588,7 @@ public:
 		}
 
 		else if(useTextShader.getValue()){
-			glUseProgram(0);
+			// glUseProgram(0);
 
 			textShader.use();
 		}

@@ -16,6 +16,8 @@ using namespace std;
 
 static float prevT;
 
+static Force Forces;
+
 /***************
  * Constructors
  ***************/
@@ -28,9 +30,12 @@ ParticleSystem::ParticleSystem() : restitution("Restitution", 0.0f, 2.0f, 1.0f, 
 	bake_start_time = 0;
 	bake_end_time = 0;
 
+
+
 	// Leave these here; the UI needs them to work correctly.
 	dirty = false;
 	simulate = false;
+	spawnPoint = Vec3f(0.0);
 }
 
 
@@ -51,6 +56,8 @@ ParticleSystem::~ParticleSystem()
 /** Start the simulation */
 void ParticleSystem::startSimulation(float t)
 {
+
+	prevT = t;
 	bake_start_time = 0;
 
 	// These values are used by the UI ...
@@ -89,22 +96,34 @@ void ParticleSystem::resetSimulation(float t)
 void ParticleSystem::computeForcesAndUpdateParticles(float t)
 {
 	if (simulate){
-
-		const float deltaT = 0.0025;
+		const float deltaT = t - prevT;
+		prevT = t;
 
 		for (auto &particle : _Particles) {
-			Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
-			Vec3f velocity = particle->getVelocity();
-			Vec3f position = particle->getPosition();
+			// Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
+			// cout << "generating particle" << endl;
 
-			for(auto &f : _Forces){
-				force += f->getForce()*particle->getMass();
-			}
+			// for(auto &f : _Forces){
+			// 	force += f->getForce();
+			// }
+			particle->addForce(particle->getMass() * Force::G());
 
-			velocity += force / particle->getMass() * deltaT;
-			position += velocity * deltaT;
-			particle->setVelocity(velocity);
-			particle->setPosition(position);
+			// particle->addForce(-(Force::K() * particle->getVelocity()));
+
+			Vec3f* oldState = particle->getState();
+			// cout << "state is " << oldState[0][0] << ", " << oldState[0][1] << ", " << oldState[0][2] << endl;
+			Vec3f* newState = particle->derivEval();
+			newState[0] *=deltaT;
+			newState[1] *=deltaT;
+			newState[0] += oldState[0];
+			newState[1] += oldState[1];
+
+			particle->setState(newState[0], newState[1]);
+			// cout << particle->getState()[0] << endl;
+			// velocity += force / particle->getMass() * deltaT;
+			// position += velocity * deltaT;
+			// particle->setVelocity(velocity);
+			// particle->setPosition(position);
 		}
 	
 	}
@@ -122,13 +141,15 @@ void ParticleSystem::drawParticles(float t)
 {
 	// YOUR CODE HERE
 	if (simulate) {
-		for (vector<Particle*>::iterator it = particles[t].begin(); it != particles[t].end(); it++) {
-			(*it)->Draw();
+		// for (vector<Particle*>::iterator it = particles[t].begin(); it != particles[t].end(); it++) {
+		// 	(*it)->Draw();
+		// }
+		for (auto &particle : _Particles) {
+			particle->Draw();
+			// cout << "drawing" << endl;
 		}
 	}
 }
-
-
 
 
 /** Adds the current configuration of particles to
@@ -144,6 +165,11 @@ void ParticleSystem::clearBaked()
 {
 	// TODO (baking is extra credit)
 
+}
+
+void ParticleSystem::addParticleStartingAt(Vec4f WorldPoint){
+	// cout << "spawn point is: "<< WorldPoint[0] << ", " << WorldPoint[1] << ", " << WorldPoint[2] << endl;
+	spawnPoint = Vec3f(WorldPoint);
 }
 
 

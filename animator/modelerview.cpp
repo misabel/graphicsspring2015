@@ -230,6 +230,7 @@ void ModelerView::draw() {
 	ParticleSystem* ps = ui->getParticleSystem();
 	if (ps) {
 		ps->computeForcesAndUpdateParticles(ui->getTime());
+		ps->addParticle();
 		ps->drawParticles(ui->getTime());
 	}
 

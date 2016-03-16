@@ -82,8 +82,13 @@ public:
 	bool isDirty() { return dirty; }
 	void setDirty(bool d) { dirty = d; }
 
-	void addParticle(Particle* p) { _Particles.push_back(p); }
-	void addForce(Force* f){ _Forces.push_back(f); }
+	void addParticle() { 
+		
+		_Particles.push_back(new Particle(spawnPoint)); 
+	}
+
+	void addParticleStartingAt(Vec4f WorldPoint);
+	// void addForce(Force* f){ _Forces.push_back(f); }
 
 protected:
 	
@@ -100,8 +105,8 @@ protected:
 	bool dirty;							// flag for updating ui (don't worry about this)
 
 	vector<Particle*> _Particles;
-	vector<Force*> _Forces;
-	map<int, std::vector<Particle*>> particles;
+	Vec3f spawnPoint;
+	// map<int, std::vector<Particle*>> particles;
 };
 
 
