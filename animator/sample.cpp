@@ -18,250 +18,7 @@
 #include <cmath>
 #include <time.h>
 
-/*
-void ground(float h);
-void base(float h);
-void rotation_base(float h);
-void lower_arm(float h);
-void upper_arm(float h);
-void claw(float h);
-void y_box(float h);
-
-class RobotArm : public Model
-{
-	RangeProperty baseRotation, lowerTilt, upperTilt, clawRotation, baseLength,
-		lowerLength, upperLength;
-
-public:
-    RobotArm() :
-		Model("Robot Arm"),
-		baseRotation("base rotation (theta)", -180, 180, 0,0.1),
-		lowerTilt("lower arm tilt (phi)", 15, 95, 55, .1),
-		upperTilt("upper arm tilt (psi)", 0, 135, 30, .1),
-		clawRotation("claw rotation (cr)", -30, 180, 0, .1),
-		baseLength("base height (h1)", .5, 10, .8, .1),
-		lowerLength("lower arm length (h2)", 1, 10, 3, .1),
-		upperLength("upper arm length (h3)", 1, 10, 2.5, .1)
-	{
-		properties.add(&baseRotation)
-				  .add(&lowerTilt)
-				  .add(&upperTilt)
-				  .add(&clawRotation)
-				  .add(&baseLength)
-				  .add(&lowerLength)
-				  .add(&upperLength);
-	}
-	virtual void draw();
-};
-
-
-// We are going to override (is that the right word?) the draw()
-// method of ModelerView to draw out RobotArm
-void RobotArm::draw()
-{*/
-	/* pick up the slider values */
-	/*float theta = baseRotation.getValue();
-	float phi = lowerTilt.getValue();
-	float psi = upperTilt.getValue();
-	float cr = clawRotation.getValue();
-	float h1 = baseLength.getValue();
-	float h2 = lowerLength.getValue();
-	float h3 = upperLength.getValue();
-
-
-
-
-	static GLfloat lmodel_ambient[] = {0.4,0.4,0.4,1.0};
-
-	// define the model
-	glPushMatrix();
-		ground(-0.2);
-
-		base(0.8);
-
-		glTranslatef( 0.0, 0.8, 0.0 );			// move to the top of the base
-		glRotatef( theta, 0.0, 1.0, 0.0 );		// turn the whole assembly around the y-axis. 
-		rotation_base(h1);						// draw the rotation base
-
-		glTranslatef( 0.0, h1, 0.0 );			// move to the top of the base
-		glRotatef( phi, 0.0, 0.0, 1.0 );		// rotate around the z-axis for the lower arm
-		glTranslatef( -0.1, 0.0, 0.4 );
-		lower_arm(h2);							// draw the lower arm
-
-		glTranslatef( 0.0, h2, 0.0 );			// move to the top of the lower arm
-		glRotatef( psi, 0.0, 0.0, 1.0 );		// rotate  around z-axis for the upper arm
-		upper_arm(h3);							// draw the upper arm
-
-		glTranslatef( 0.0, h3, 0.0 );
-		glRotatef( cr, 0.0, 0.0, 1.0 );
-		claw(1.0);
-
-	glPopMatrix();
-}
-
-void ground(float h) 
-{
-	//glDisable(GL_LIGHTING);
-	//glColor3f(0.65,0.45,0.2);
-	setDiffuseColor(0.65,0.45,0.2);
-	setAmbientColor(0.65,0.45,0.2);
-	glPushMatrix();
-		glScalef(30,0,30);
-		y_box(h);
-	glPopMatrix();
-	//glEnable(GL_LIGHTING);
-}
-
-void base(float h) {
-	setDiffuseColor( 0.85, 0.75, 0.25 );
-	setAmbientColor( 0.25, 0.25, 0.25 );
-	glPushMatrix();
-		glPushMatrix();
-			glTranslatef(1.0, h / 2.0, 0.75);
-			drawCylinder(0.25, h / 2.0, h / 2.0);
-		glPopMatrix();
-
-		glPushMatrix();
-			glTranslatef(1.0, h / 2.0, -1.0);
-			drawCylinder(0.25, h / 2.0, h / 2.0);
-		glPopMatrix();
-
-		glPushMatrix();
-			glTranslatef(-1.0, h / 2.0, 0.75);
-			drawCylinder(0.25, h / 2.0, h / 2.0);
-		glPopMatrix();
-
-		glPushMatrix();
-			glTranslatef(-1.0, h / 2.0, -1.0);
-			drawCylinder(0.25, h / 2.0, h / 2.0);
-		glPopMatrix();
-
-	glScalef(4.0f, h, 4.0f);
-	y_box(1.0f);
-	glPopMatrix();
-}
-
-void rotation_base(float h) {
-	setDiffuseColor( 0.85, 0.75, 0.25 );
-	setAmbientColor( 0.95, 0.75, 0.25 );
-	glPushMatrix();
-		glPushMatrix();
-			glScalef(4.0, h, 4.0);
-			y_box(1.0f); // the rotation base
-		glPopMatrix();
-		setDiffuseColor( 0.15, 0.15, 0.65 );
-		setAmbientColor( 0.15, 0.15, 0.65 );
-		glPushMatrix();
-			glTranslatef(-0.5, h, -0.6);
-			glScalef(2.0, h, 1.6);
-			y_box(1.0f); // the console
-		glPopMatrix();
-		setDiffuseColor( 0.65, 0.65, 0.65 );
-		setAmbientColor( 0.65, 0.65, 0.65 );
-		glPushMatrix();
-			glTranslatef( 0.5, h, 0.6 );
-			glRotatef( -90.0, 1.0, 0.0, 0.0 );
-			drawCylinder( h, 0.05, 0.05 ); // the pipe
-		glPopMatrix();
-	glPopMatrix();
-}
-
-void lower_arm(float h) {					// draw the lower arm
-	setDiffuseColor( 0.85, 0.75, 0.25 );
-	setAmbientColor( 0.95, 0.75, 0.25 );
-	y_box(h);
-}
-
-void upper_arm(float h) {					// draw the upper arm
-	setDiffuseColor( 0.85, 0.75, 0.25 );
-	setAmbientColor( 0.95, 0.75, 0.25 );
-	glPushMatrix();
-	glScalef( 1.0, 1.0, 0.7 );
-	y_box(h);
-	glPopMatrix();
-}
-
-void claw(float h) {
-	setDiffuseColor( 0.25, 0.25, 0.85 );
-	setAmbientColor( 0.25, 0.25, 0.85 );
-
-	glBegin( GL_TRIANGLES );
-
-	glNormal3d( 0.0, 0.0, 1.0);		// +z side
-	glVertex3d( 0.5, 0.0, 0.5);
-	glVertex3d(-0.5, 0.0, 0.5);
-	glVertex3d( 0.5,   h, 0.5);
-
-	glNormal3d( 0.0, 0.0, -1.0);	// -z side
-	glVertex3d( 0.5, 0.0, -0.5);
-	glVertex3d(-0.5, 0.0, -0.5);
-	glVertex3d( 0.5,   h, -0.5);
-
-	glEnd();
-
-	glBegin( GL_QUADS );
-
-	glNormal3d( 1.0,  0.0,  0.0);	// +x side
-	glVertex3d( 0.5, 0.0,-0.5);
-	glVertex3d( 0.5, 0.0, 0.5);
-	glVertex3d( 0.5,   h, 0.5);
-	glVertex3d( 0.5,   h,-0.5);
-
-	glNormal3d( 0.0,-1.0, 0.0);		// -y side
-	glVertex3d( 0.5, 0.0, 0.5);
-	glVertex3d( 0.5, 0.0,-0.5);
-	glVertex3d(-0.5, 0.0,-0.5);
-	glVertex3d(-0.5, 0.0, 0.5);
-
-	glEnd();
-}
-
-void y_box(float h) {
-
-	glBegin( GL_QUADS );
-
-	glNormal3d( 1.0 ,0.0, 0.0);			// +x side
-	glVertex3d( 0.25,0.0, 0.25);
-	glVertex3d( 0.25,0.0,-0.25);
-	glVertex3d( 0.25,  h,-0.25);
-	glVertex3d( 0.25,  h, 0.25);
-
-	glNormal3d( 0.0 ,0.0, -1.0);		// -z side
-	glVertex3d( 0.25,0.0,-0.25);
-	glVertex3d(-0.25,0.0,-0.25);
-	glVertex3d(-0.25,  h,-0.25);
-	glVertex3d( 0.25,  h,-0.25);
-
-	glNormal3d(-1.0, 0.0, 0.0);			// -x side
-	glVertex3d(-0.25,0.0,-0.25);
-	glVertex3d(-0.25,0.0, 0.25);
-	glVertex3d(-0.25,  h, 0.25);
-	glVertex3d(-0.25,  h,-0.25);
-
-	glNormal3d( 0.0, 0.0, 1.0);			// +z side
-	glVertex3d(-0.25,0.0, 0.25);
-	glVertex3d( 0.25,0.0, 0.25);
-	glVertex3d( 0.25,  h, 0.25);
-	glVertex3d(-0.25,  h, 0.25);
-
-	glNormal3d( 0.0, 1.0, 0.0);			// top (+y)
-	glVertex3d( 0.25,  h, 0.25);
-	glVertex3d( 0.25,  h,-0.25);
-	glVertex3d(-0.25,  h,-0.25);
-	glVertex3d(-0.25,  h, 0.25);
-
-	glNormal3d( 0.0,-1.0, 0.0);			// bottom (-y)
-	glVertex3d( 0.25,0.0, 0.25);
-	glVertex3d(-0.25,0.0, 0.25);
-	glVertex3d(-0.25,0.0,-0.25);
-	glVertex3d( 0.25,0.0,-0.25);
-
-	glEnd();
-}*/
-
 /** The scene, which includes the lights and models. */
-
-
 class Scene : public Model {
 protected:
 ///////////////////////////////// TEXTURES ////////////////////////////////////
@@ -272,6 +29,7 @@ protected:
 	ShaderProgram toonShader;
 	ShaderProgram schlickShader;
 	ShaderProgram textShader;
+	ShaderProgram spotLightShader;
 
 //////////////////////////////// PROPERTIES ///////////////////////////////////
 	// Switches for spheres
@@ -281,11 +39,13 @@ protected:
 
 	// Lets you pick what shapes to use for the default model!
 	ChoiceProperty shapeChoice;
+	ChoiceProperty shaderChoice;
 
 	BooleanProperty useShader;
 	BooleanProperty useToonShader;
 	BooleanProperty useSchlickShader;
 	BooleanProperty useTextShader;
+	BooleanProperty useSpotLightShader;
 
 	// Some slider properties
 	RangeProperty rotateX, rotateY;
@@ -296,10 +56,10 @@ protected:
 	// Diffuse color picker
 	RGBProperty diffuse;
 
-
 	// Scene lights
 	PointLight pointLight;
 	DirectionalLight directionalLight;
+	SpotLight spotLight;
 
 	// A robot arm model
 	//RobotArm robotArm;
@@ -330,8 +90,12 @@ public:
 		toonShader("toonShader.vert", "toonShader.frag", NULL),
 		schlickShader("schlickShader.vert", "schlickShader.frag", NULL),
 		textShader("textShader.vert", "textShader.frag", NULL),
+		spotLightShader("spotLightShader.vert", "spotLightShader.frag", NULL),
 
 		// Call the constructors for the lights
+		spotLight("Spot Light", GL_LIGHT2, /**direction part**/ -5, 5, 5, /**diffuse part**/ 1.0, 0.0, 0.9, 
+		/**specular part**/ 1.0, 0.5, 0.5, /**ambient part**/ .2f, 0.1, 0.1 /**attenuation part**/, 0.4, 0.7, 0,
+		/**spotX/Y/Z part**/ -7, 10, 8, /**spotlight angle**/ 5, 30 ),
 		pointLight("Point Light", GL_LIGHT1, /**direction part**/ -5, 5, 5, /**diffuse part**/ 1.0, 0.5, 0.5, 
 		/**specular part**/ 1.0, 0.5, 0.5, /**ambient part**/ .2f, 0.1, 0.1 /**attenuation part**/, 0.4, 0.7, 0),
 		directionalLight("Directional Light", GL_LIGHT0, /**direction part**/ 5, 5, 5, /**diffuse part**/ 0.0f, 0.5, 0.5f, 
@@ -341,10 +105,12 @@ public:
 		, useTexture("Use Checkered Texture", true),
 		showReferenceUnitSphere("Show Reference Unit Sphere", false),
 		shapeChoice("Model Shape:", "Sphere|Cube|Cylinder|Torus|Icosahedron|Teapot|Revolution|My Model", 0), //557 animator UI allows shapes + Model
+		shaderChoice("Shape To Use:", "None|Cartoon Shader|Schlick Shader|Texture Blinn Phong Shader|Spotlight Shader", 0),
 		useShader("Use My Shader", true),
 		useToonShader("Use Cartoon Shader", false),
 		useSchlickShader("Use Schlick Shader", false),
 		useTextShader("Use Texture Blinn Phong Shader", false),
+		useSpotLightShader("Use Spot Light Shader", false),
 		rotateX("Rotate Basic Shape X", -180, 180, 0, 1),
 		rotateY("Rotate Basic Shape Y", -180, 180, 0, 1),
 		brightness("Brightness", 0.0f, 1.0f, 1.0f, 0.1f),
@@ -362,6 +128,7 @@ public:
 		// in the top left corner of Modeler, under this model's entry:
 		properties.add(pointLight.getProperties())
 				  .add(directionalLight.getProperties())
+				  .add(spotLight.getProperties())
 				  .add(myModel.getProperties())
 				  ;
 		//properties.add(robotArm.getProperties());
@@ -370,13 +137,16 @@ public:
 		properties.add(&useTexture)
 				  ;
 		properties.add(&showReferenceUnitSphere)
-				  .add(&shapeChoice);
-		properties.add(&useShader)
+				  .add(&shapeChoice)
+				  .add(&shaderChoice);
+		properties.add(&rotateX)
+				.add(&rotateY)
+				.add(&useShader)
 				.add(&useToonShader)
 				.add(&useSchlickShader)
 				.add(&useTextShader)
-				.add(&rotateX)
-				.add(&rotateY);
+				.add(&useSpotLightShader)
+				;
 		properties.add(&sphereCenterX)
 				.add(&sphereCenterY)
 				.add(&sphereCenterZ);
@@ -403,6 +173,7 @@ public:
 		toonShader.load();
 		schlickShader.load();
 		textShader.load();
+		spotLightShader.load();
 	}
 
 	/**
@@ -529,6 +300,7 @@ public:
 		// can get lit!
 		pointLight.draw();
 		directionalLight.draw();
+		spotLight.draw();
 		//reset colors
 		setDiffuseColor(
 			diffuse.getRed(),
@@ -549,53 +321,50 @@ public:
 		}
 
 		// Use the shader if desired.
+
 		if (useShader.getValue()) {
 			// glUseProgram(0);
-			// useToonShader.setValue(false);
-			shader.use();
-			// glGetUniformLocation gets the memory location of a variable with the given char* name, in this case "brightness"
-			// for the given shader program, identified by its ID.
-			GLint brightnessVariableLocation = glGetUniformLocation( shader.getID(), "brightness" );
-			// glUniform1f sets the value of a particular uniform variable location with a single float value (hence the suffix "1f")
-			glUniform1f(brightnessVariableLocation, brightness.getValue());
 
-		}
-		else if(useToonShader.getValue()){
-			// glUseProgram(0);
-			useShader.setValue(false);
-			toonShader.use();
+		GLint brightnessVariableLocation;
+		GLint N1VariableLocation;
+		GLint N2VariableLocation;
+		switch (shaderChoice.getValue()) {
+			case 0: // None
+				shader.use();
+				brightnessVariableLocation = glGetUniformLocation( shader.getID(), "brightness" );
+				glUniform1f(brightnessVariableLocation, brightness.getValue());
+				break;
 
-			// glGetUniformLocation gets the memory location of a variable with the given char* name, in this case "brightness"
-			// for the given shader program, identified by its ID.
-			GLint brightnessVariableLocation = glGetUniformLocation( toonShader.getID(), "brightness" );
-			// glUniform1f sets the value of a particular uniform variable location with a single float value (hence the suffix "1f")
-			glUniform1f(brightnessVariableLocation, brightness.getValue());
+			case 1: // Cartoon Shader
+				// useShader.setValue(false);
+				toonShader.use();
+				brightnessVariableLocation = glGetUniformLocation( toonShader.getID(), "brightness" );
+				glUniform1f(brightnessVariableLocation, brightness.getValue());
+				break;
 
-		}
+			case 2: // Schlick Shader
+				// shader.use();
+				schlickShader.use();
 
-		else if(useSchlickShader.getValue()){
-			// glUseProgram(0);
-			shader.use();
-			schlickShader.use();
+				brightnessVariableLocation = glGetUniformLocation( schlickShader.getID(), "brightness");
+				N1VariableLocation = glGetUniformLocation( schlickShader.getID(), "N1");
+				N2VariableLocation = glGetUniformLocation( schlickShader.getID(), "N2");
+				glUniform1f(brightnessVariableLocation, brightness.getValue());
+				glUniform1f(N1VariableLocation, N1.getValue());
+				glUniform1f(N2VariableLocation, N2.getValue());
+				break;
 
-			GLint brightnessVariableLocation = glGetUniformLocation( schlickShader.getID(), "brightness");
-			GLint N1VariableLocation = glGetUniformLocation( schlickShader.getID(), "N1");
-			GLint N2VariableLocation = glGetUniformLocation( schlickShader.getID(), "N2");
+			case 3: // Texture Blinn Phong
+				glUseProgram(0);
+				break;
 
-			glUniform1f(brightnessVariableLocation, brightness.getValue());
-			glUniform1f(N1VariableLocation, N1.getValue());
-			glUniform1f(N2VariableLocation, N2.getValue());
-		}
+			case 4:
+				spotLightShader.use();
+				brightnessVariableLocation = glGetUniformLocation(spotLightShader.getID(), "brightness");
+				glUniform1f(brightnessVariableLocation, brightness.getValue());
+				break;
 
-		else if(useTextShader.getValue()){
-			// glUseProgram(0);
-
-			textShader.use();
-		}
-		else
-		{
-			if (glUseProgram) { glUseProgram(0); } //don't use shader
-		}
+			}
 
 
 		// Call a class method that draws our model.
@@ -610,6 +379,7 @@ public:
 		// Stop applying textures to objects
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+}
 };
 
 /**

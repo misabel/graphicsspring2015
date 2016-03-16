@@ -64,35 +64,45 @@ void CatmullRomCurveEvaluator::evaluateCurve(const std::vector<Point>& ptvCtrlPt
 
 		for (int i = 0; i < iCtrlPtCount - 1; i++) 
 		{
-			points.clear();
-			// Duplicate first endpoint
-			if (i == 0) {
-				points.push_back(ptvCtrlPts[i]);
-				points.push_back(ptvCtrlPts[i]);
-				points.push_back(ptvCtrlPts[i + 1]);
-				points.push_back(ptvCtrlPts[i + 2]);
-			}
-			// Duplicate last endpoint
-			else if (i == iCtrlPtCount - 2)
+			if(ptvCtrlPts[i + 1].x > ptvCtrlPts[i].x)
 			{
-				points.push_back(ptvCtrlPts[i - 1]);
-				points.push_back(ptvCtrlPts[i]);
-				points.push_back(ptvCtrlPts[i + 1]);
-				points.push_back(ptvCtrlPts[i + 1]);
+				points.clear();
+				// Duplicate first endpoint
+				if (i == 0) {
+					points.push_back(ptvCtrlPts[i]);
+					points.push_back(ptvCtrlPts[i]);
+					points.push_back(ptvCtrlPts[i + 1]);
+					points.push_back(ptvCtrlPts[i + 2]);
+				}
+				// Duplicate last endpoint
+				else if (i == iCtrlPtCount - 2)
+				{
+					points.push_back(ptvCtrlPts[i - 1]);
+					points.push_back(ptvCtrlPts[i]);
+					points.push_back(ptvCtrlPts[i + 1]);
+					points.push_back(ptvCtrlPts[i + 1]);
+				}
+				else
+				{
+					points.push_back(ptvCtrlPts[i - 1]);
+					points.push_back(ptvCtrlPts[i]);
+					points.push_back(ptvCtrlPts[i + 1]);
+					points.push_back(ptvCtrlPts[i + 2]);
+				}
+
+				std::vector<Animator::Point> bezierPoints = getBezierPoints(points);
+				// sampling from 0 to 1 by 0.01
+				for (float sample = 0; sample < 1; sample += 0.01)
+				{
+					ptvEvaluatedCurvePts.push_back(calculateBezierPoint(bezierPoints, sample));
+				}
 			}
+			// If x is not monotonically increasing as a function of t,
+			// we just add a linear curve
 			else
 			{
-				points.push_back(ptvCtrlPts[i - 1]);
-				points.push_back(ptvCtrlPts[i]);
-				points.push_back(ptvCtrlPts[i + 1]);
-				points.push_back(ptvCtrlPts[i + 2]);
-			}
-
-			std::vector<Animator::Point> bezierPoints = getBezierPoints(points);
-			// sampling from 0 to 1 by 0.01
-			for (float sample = 0; sample < 1; sample += 0.01)
-			{
-		    	ptvEvaluatedCurvePts.push_back(calculateBezierPoint(bezierPoints, sample));
+				ptvEvaluatedCurvePts.push_back(ptvCtrlPts[i]);
+				ptvEvaluatedCurvePts.push_back(ptvCtrlPts[i + 1]);
 			}
 		}
 	}

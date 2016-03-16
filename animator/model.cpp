@@ -563,3 +563,46 @@ void DirectionalLight::draw() {
 	Light::draw(true);
 }
 
+/**
+ * A spotlight light.
+ */
+SpotLight::SpotLight(const char* name, GLuint lightNumber,
+				float x, float y, float z,
+				float dr, float dg, float db,
+				float sr, float sg, float sb,
+				float ar, float ag, float ab,
+				float attA, float attB, float attC,
+				float sX, float sY, float sZ, float beta, float alpha) :
+	Light(name, lightNumber, x, y, z, dr, dg, db, sr, sg, sb, ar, ag, ab),
+	attenA("Quadratic Attenuation ^ 5", 0, 1, attA, .05f),
+	attenB("Linear Attenuation ^ 5", 0, 1, attB, .05f),
+	attenC("Constant Attenuation ^ 5", 0, 1, attC, .05f),
+	spotX("Spotlight X", -10, 10, sX, .01f),
+	spotY("Spotlight Y", -10, 10, sY, .01f),
+	spotZ("Spotlight Z", -10, 10, sZ, .01f),
+	cutoff("Cutoff", 0, 90, alpha, .01f),
+	falloff("Angular Falloff", 0, 10, beta, .01f)
+{
+	properties.add(&attenA).add(&attenB).add(&attenC).add(&spotX)
+				.add(&spotY).add(&spotZ).add(&cutoff).add(&falloff);
+}
+
+void SpotLight::draw() {
+	// Set attenuation
+	glLightf(lightNumber, GL_CONSTANT_ATTENUATION, pow(attenC.getValue(), 5));
+	glLightf(lightNumber, GL_LINEAR_ATTENUATION, pow(attenB.getValue(), 5));
+	glLightf(lightNumber, GL_QUADRATIC_ATTENUATION, pow(attenA.getValue(), 5));
+
+	GLfloat light_direction[] = { 
+		(GLfloat)spotX.getValue(), 
+		(GLfloat)spotY.getValue(), 
+		(GLfloat)spotZ.getValue() 
+	};
+	glLightfv(lightNumber, GL_SPOT_DIRECTION, light_direction);
+	
+	glLightf(lightNumber, GL_SPOT_CUTOFF, cutoff.getValue());
+	glLightf(lightNumber, GL_SPOT_EXPONENT, falloff.getValue());
+	Light::draw(false);
+}
+
+

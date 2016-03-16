@@ -59,10 +59,6 @@ void main()
 	// float dist = sqrt(pow(P_Light[0], 2.0) + pow(P_Light[1], 2.0) + pow(P_Light[2], 2.0));
 	// P_diffuseShade /= gl_LightSource[1].quadraticAttenuation * (dist * dist) + gl_LightSource[1].linearAttenuation * dist + gl_LightSource[1].constantAttenuation;
 	
-
-    
-
-	
 	// vec4 spec = P_specularShade * gl_FrontLightProduct[1].specular;
 
 
@@ -83,7 +79,6 @@ void main()
 	specular = clamp(specular, 0.0, 1.0);
 
 	finalColor += ambient + diffuse + specular;
-	
 
 
 	// if(P_diffuseShade > 0.0){
@@ -100,7 +95,7 @@ void main()
 
 
 	// Assign final color
-	// gl_FragColor = ambient + diffuse + specular + gl_FrontMaterial.emission;
+	//gl_FragColor = ambient + diffuse + specular + gl_FrontMaterial.emission;
 	
 	gl_FragColor = finalColor * brightness;
 	// Scale with brightness value
