@@ -100,25 +100,49 @@ void ParticleSystem::computeForcesAndUpdateParticles(float t)
 		prevT = t;
 
 		for (auto &particle : _Particles) {
-			// Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
+			Vec3f force = Vec3f(0.0f, 0.0f, 0.0f);
+			// Vec3f position = particle->getPosition();
+			Vec3f velocity = particle->getVelocity();
+			float mass = particle->getMass();
+
+
+			force += mass * Force::G();
+			force -= Force::K() * velocity;
+			Force::randomizeK();
+
+			particle->derivEval(deltaT, force);
+
+			// Vec3f new_position = velocity;
+			// Vec3f new_velocity = force / mass;
+
+			// new_position *= deltaT;
+			// new_velocity *= deltaT;
+
+			// new_position +=position;
+			// new_velocity +=velocity;
+
+
+
+			// particle->setPosition(new_position);
+			// particle->setVelocity(new_velocity);
 			// cout << "generating particle" << endl;
 
 			// for(auto &f : _Forces){
 			// 	force += f->getForce();
 			// }
-			particle->addForce(particle->getMass() * Force::G());
+			// particle->addForce(particle->getMass() * Force::G());
 
 			// particle->addForce(-(Force::K() * particle->getVelocity()));
 
-			Vec3f* oldState = particle->getState();
+			// Vec3f* oldState = particle->getState();
 			// cout << "state is " << oldState[0][0] << ", " << oldState[0][1] << ", " << oldState[0][2] << endl;
-			Vec3f* newState = particle->derivEval();
-			newState[0] *=deltaT;
-			newState[1] *=deltaT;
-			newState[0] += oldState[0];
-			newState[1] += oldState[1];
+			// Vec3f* newState = particle->derivEval();
+			// newState[0] *=deltaT;
+			// newState[1] *=deltaT;
+			// newState[0] += oldState[0];
+			// newState[1] += oldState[1];
 
-			particle->setState(newState[0], newState[1]);
+			// particle->setState(newState[0], newState[1]);
 			// cout << particle->getState()[0] << endl;
 			// velocity += force / particle->getMass() * deltaT;
 			// position += velocity * deltaT;

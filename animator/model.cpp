@@ -64,21 +64,21 @@ MyModel::MyModel() :
 
 void MyModel::draw() {
 
-	/*glPushMatrix();
+	// glPushMatrix();
 
-		glPushMatrix();
-			glTranslatef(0, 4, 0);
-			drawSphere(.5);
-		glPopMatrix();
+	// 	// glPushMatrix();
+	// 	// 	glTranslatef(0, 4, 0);
+	// 	// 	drawSphere(.5);
+	// 	// glPopMatrix();
 
-		setDiffuseColor(0.65,0.45,0.2);
-		setAmbientColor(0.65,0.45,0.2);
-		glPushMatrix();
-			glScalef(30,0,30);
-			y_box(1);
-		glPopMatrix();
+	// 	setDiffuseColor(0.65,0.45,0.2);
+	// 	setAmbientColor(0.65,0.45,0.2);
+	// 	glPushMatrix();
+	// 		glScalef(30,0,30);
+	// 		y_box(1);
+	// 	glPopMatrix();
 
-	glPopMatrix();*/
+	// glPopMatrix();
 
 
 	Mat4f CameraMatrix = glGetModelViewMatrix();
@@ -98,7 +98,7 @@ void MyModel::draw() {
 	// define the model
 	glPushMatrix();
 
-		//ground(-0.2);
+		// ground(-0.2);
 
 		// Head
 		glPushMatrix();

@@ -23,20 +23,20 @@ public:
 	void setVelocity(Vec3f v);
 	
 	virtual void Draw();
-	void addForce(Vec3f f);
-	Vec3f* getState();
-	void setState(Vec3f p, Vec3f v);
-	Vec3f* derivEval();
+	// void addForce(Vec3f f);
+	// Vec3f* getState();
+	// void setState(Vec3f p, Vec3f v);
+	void derivEval(float deltaT, Vec3f forces);
 
 protected:
 	float _mass;
 	Vec3f _position;
 	Vec3f _velocity;
-	Vec3f _forces;
+	// Vec3f _forces;
 	Vec3f* _state;
 
 private:
-	void updateState();
+	// void updateState();
 };
 
 #endif __PARTICLE_H__

@@ -2,86 +2,93 @@
 
 
 Particle::Particle(){
-	_mass = 1.0;
+	_mass = 0.5;
 	_position = Vec3f(0.0);
 	_velocity = Vec3f(0.0);
-	_state = new Vec3f[2];
-	_forces = Vec3f(0.0);
-	updateState();
+	// _state = new Vec3f[2];
+	// _forces = Vec3f(0.0);
+	// updateState();
 }
 Particle::Particle(float mass, const Vec3f Position, const Vec3f Velocity){
 	_mass = mass;
 	_position = Vec3f(Position);
 	_velocity = Velocity;
-	_state = new Vec3f[2];
-	_forces = Vec3f(0.0);
-	updateState();
+	// _state = new Vec3f[2];
+	// _forces = Vec3f(0.0);
+	// updateState();
 }
 Particle::Particle(const Vec3f Position, const Vec3f Velocity) 
 {
 	_mass = 1.0;
 	_position = Vec3f(Position);
 	_velocity = Velocity;
-	_state = new Vec3f[2];
-	_forces = Vec3f(0.0);
-	updateState();
+	// _state = new Vec3f[2];
+	// _forces = Vec3f(0.0);
+	// updateState();
 }
 Particle::Particle(const Vec3f Position) 
 {
 	_mass = 1.0;
 	_position = Vec3f(Position);
 	_velocity = Vec3f(0.0);
-	_state = new Vec3f[2];
-	_forces = Vec3f(0.0);
-	updateState();
+	// _state = new Vec3f[2];
+	// _forces = Vec3f(0.0);
+	// updateState();
 
 }
 
-void Particle::addForce(Vec3f force)
-{
-	_forces += force;
-}
+// void Particle::addForce(Vec3f force)
+// {
+// 	_forces += force;
 
-Vec3f* Particle::getState()
-{
-	return _state;
-}
+// }
 
-void Particle::setState(Vec3f p, Vec3f v)
-{
-	_position = p;
-	_position[0] = 0.0;
-	_position[2] = 0.0;
-	_velocity = v;
-	updateState();
-}
+// Vec3f* Particle::getState()
+// {
+// 	return _state;
+// }
 
-void Particle::updateState()
-{
-	_state[0] = _position;
-	_state[1] = _velocity;
+// void Particle::setState(Vec3f p, Vec3f v)
+// {
+// 	_position = p;
+// 	// _position[0] = 0.0;
+// 	// _position[2] = 0.0;
+// 	_velocity = v;
+// 	updateState();
+// }
 
-	// cout << "velocity is: " << _velocity[0] << ", " << _velocity[1] << ", " << _velocity[2] << endl;
-}
+// void Particle::updateState()
+// {
+// 	_state[0] = _position;
+// 	_state[1] = _velocity;
+
+// 	// cout << "velocity is: " << _velocity[0] << ", " << _velocity[1] << ", " << _velocity[2] << endl;
+// }
 
 void Particle::setPosition(Vec3f p)
 {
 	_position = p;
-	updateState();
+	// updateState();
 }
 
 void Particle::setVelocity(Vec3f v)
 {
 	_velocity = v;
-	updateState();
+	// updateState();
 }
 
-Vec3f* Particle::derivEval()
+void Particle::derivEval(float deltaT, Vec3f forces)
 {
-	Vec3f derivative[2] = {_velocity, (_forces/_mass)};
-	_forces = Vec3f(0.0);
+	Vec3f new_position = _velocity * deltaT;
+	Vec3f new_velocity = forces/_mass * deltaT;
+
+	_position += new_position;
+	_velocity += new_velocity;
+	// Vec3f derivative[2] = {_velocity, (_forces/_mass)};
+	// cout << _velocity[0] << ", " << _velocity[1] << ", " << _velocity[2] << endl;
+	// _forces = Vec3f(0.0);
 	// cout << _forces[1] << endl;
-	return derivative;
+	// return derivative;
 }
 
 void Particle::Draw()

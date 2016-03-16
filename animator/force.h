@@ -3,6 +3,7 @@
 
 #include "vec.h"
 #include <vector>
+#include <stdlib.h>
 
 class Force {
 private:
@@ -30,6 +31,8 @@ public:
 	static void setK(float viscous){
 		k = viscous;
 	}
+
+	static void randomizeK();
 
 };
 
