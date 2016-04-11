@@ -34,7 +34,7 @@ ALL.O = curve.o curveevaluator.o beziercurveevaluator.o catmullromcurveevaluator
 	modelerdraw.o modelerui.o modelerview.o imageio.o point.o rect.o vault.o vect.o cameras.o \
 	model.o particleSystem.o properties.o \
 	rijndael.o shaders.o trackball.o sample.o \
-	particle.o force.o
+	particle.o force.o cloth.o clothParticle.o constraint.o
 
 modeler: $(ALL.O)
 	$(CC) $(CFLAGS) -o $@ $(ALL.O) $(INCLUDE) $(LIBDIR) $(LIBS)

@@ -82,7 +82,7 @@ void MyModel::draw() {
 
 
 	Mat4f CameraMatrix = glGetModelViewMatrix();
-	/* pick up the slider values */
+	//pick up the slider values 
 	float hr = headRotation.getValue();
 	float lua = leftUpperArmTilt.getValue();
 	float lla = leftLowerArmTilt.getValue();

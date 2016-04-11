@@ -18,6 +18,7 @@
 
 #include "vec.h"
 #include "vault.h"
+#include "cloth.h"
 
 using namespace std;
 // Helper functions from the red book so we can print text on the
@@ -348,56 +349,58 @@ void drawSphere(double r)
     }
     else
     {
-        int divisions; 
-        switch(mds->m_quality)
-        {
-        case HIGH: 
-            divisions = 128; break;
-        case MEDIUM: 
-            divisions = 32; break;
-        case LOW:
-            divisions = 16; break;
-        case POOR:
-            divisions = 8; break;
-        }
+    	Cloth* c = new Cloth(Vec3f(0.0), 10.0, 10.0, 3, 3);
+    	c->drawCloth();
+  //       int divisions; 
+  //       switch(mds->m_quality)
+  //       {
+  //       case HIGH: 
+  //           divisions = 128; break;
+  //       case MEDIUM: 
+  //           divisions = 32; break;
+  //       case LOW:
+  //           divisions = 16; break;
+  //       case POOR:
+  //           divisions = 8; break;
+  //       }
 
 
-		const float PI = 3.14159265f;
-		int n = divisions;
-		float origin_x = 0;
-		float origin_y = 0;
-		float origin_z = 0;
+		// const float PI = 3.14159265f;
+		// int n = divisions;
+		// float origin_x = 0;
+		// float origin_y = 0;
+		// float origin_z = 0;
 
-		for (int i = 0; i < n / 2 ; i++) {
-			float a1 = i * (PI * 2) / n - (PI / 2);
-			float a2 = (i + 1) * (PI * 2) / n - (PI / 2);
-			glBegin(GL_QUAD_STRIP);
-				for (int j = 0; j <= n; j++) {
-					float a3 = j * (PI * 2) / n;
-					float n1_x = cos(a2) * sin(a3);
-					float n1_y = cos(a2) * cos(a3);
-					float n1_z = sin(a2);
+		// for (int i = 0; i < n / 2 ; i++) {
+		// 	float a1 = i * (PI * 2) / n - (PI / 2);
+		// 	float a2 = (i + 1) * (PI * 2) / n - (PI / 2);
+		// 	glBegin(GL_QUAD_STRIP);
+		// 		for (int j = 0; j <= n; j++) {
+		// 			float a3 = j * (PI * 2) / n;
+		// 			float n1_x = cos(a2) * sin(a3);
+		// 			float n1_y = cos(a2) * cos(a3);
+		// 			float n1_z = sin(a2);
 
-					float p1_x = (float)(origin_x + r * n1_x);
-					float p1_y = (float)(origin_y + r * n1_y);
-					float p1_z = (float)(origin_z + r * n1_z);
-					glNormal3f(n1_x, n1_y, n1_z);
-					glTexCoord2f( (GLfloat)(1.0 - j / (float) n), (GLfloat)(2 * (i + 1) / (float) n));
-					glVertex3f(p1_x, p1_y, p1_z);
+		// 			float p1_x = (float)(origin_x + r * n1_x);
+		// 			float p1_y = (float)(origin_y + r * n1_y);
+		// 			float p1_z = (float)(origin_z + r * n1_z);
+		// 			glNormal3f(n1_x, n1_y, n1_z);
+		// 			glTexCoord2f( (GLfloat)(1.0 - j / (float) n), (GLfloat)(2 * (i + 1) / (float) n));
+		// 			glVertex3f(p1_x, p1_y, p1_z);
 
-					n1_x = cos(a1) * sin(a3);
-					n1_y = cos(a1) * cos(a3);
-					n1_z = sin(a1);
+		// 			n1_x = cos(a1) * sin(a3);
+		// 			n1_y = cos(a1) * cos(a3);
+		// 			n1_z = sin(a1);
 
-					p1_x = (float)(origin_x + r * n1_x);
-					p1_y = (float)(origin_y + r * n1_y);
-					p1_z = (float)(origin_z + r * n1_z);
-					glNormal3f(n1_x, n1_y, n1_z);
-					glTexCoord2f((GLfloat)(1.0 - j / (float) n), (GLfloat)(2 * i / (float) n));
-					glVertex3f(p1_x, p1_y, p1_z);
-				}
-			glEnd();
-		}
+		// 			p1_x = (float)(origin_x + r * n1_x);
+		// 			p1_y = (float)(origin_y + r * n1_y);
+		// 			p1_z = (float)(origin_z + r * n1_z);
+		// 			glNormal3f(n1_x, n1_y, n1_z);
+		// 			glTexCoord2f((GLfloat)(1.0 - j / (float) n), (GLfloat)(2 * i / (float) n));
+		// 			glVertex3f(p1_x, p1_y, p1_z);
+		// 		}
+		// 	glEnd();
+		//}
     }
 }
 
@@ -576,206 +579,209 @@ int write_revolution_rayfile(FILE* rayfile, int num_vertices, int num_triangles,
 
 void drawRevolutions(std::vector<Point2d> *pts, int divisions, double scale)
 {
-	std::vector<Point2d> revolution_pts = *pts;
-	Texture2D checkers = Texture2D("checkers.png");
 
-    ModelerDrawState *mds = ModelerDrawState::Instance();
-	_setupOpenGl();
-	const float PI = 3.141592653589793238462643383279502f;
-	float origin_x = 0.0;
-	float origin_y = 1.2f;
-	float origin_z = -3.0f;
+	Cloth* c = new Cloth(Vec3f(10.0), 10.0, 10.0, 3, 3);
+    	c->drawCloth();
+	// std::vector<Point2d> revolution_pts = *pts;
+	// Texture2D checkers = Texture2D("checkers.png");
 
-	// cout << "THIS IS CALLED" << endl;
-	// YOUR DRAW REVOLUTION CODE HERE
+ //    ModelerDrawState *mds = ModelerDrawState::Instance();
+	// _setupOpenGl();
+	// const float PI = 3.141592653589793238462643383279502f;
+	// float origin_x = 0.0;
+	// float origin_y = 1.2f;
+	// float origin_z = -3.0f;
 
-	// checkers("checkers.png", GL_REPLACE);
+	// // cout << "THIS IS CALLED" << endl;
+	// // YOUR DRAW REVOLUTION CODE HERE
 
-	checkers.load();
-	checkers.use();
+	// // checkers("checkers.png", GL_REPLACE);
+
+	// checkers.load();
+	// checkers.use();
 	
-	int num_pts = revolution_pts.size();
+	// int num_pts = revolution_pts.size();
 
-	for(int i = 0; i < divisions; i++){
-		for(int j = 0; j < num_pts - 1 ; j++){
-			float rotation = (2 * PI * i)/divisions;
-
-
-			float p1_x = revolution_pts[j + 1].x * cos(rotation);
-			float p1_y = origin_y + revolution_pts[j + 1].y;
-			float p1_z = revolution_pts[j + 1].x * sin(rotation);
-
-			float p2_x = revolution_pts[j].x * cos(rotation);
-			float p2_y = origin_y + revolution_pts[j].y;
-			float p2_z = revolution_pts[j].x * sin(rotation);
-
-			if(i != divisions)
-				rotation = (2 * PI * (i + 1))/divisions;
-			else
-				rotation = (2 * PI * (0.0))/divisions;
+	// for(int i = 0; i < divisions; i++){
+	// 	for(int j = 0; j < num_pts - 1 ; j++){
+	// 		float rotation = (2 * PI * i)/divisions;
 
 
-			float p3_x = revolution_pts[j].x * cos(rotation);
-			float p3_y = origin_y + revolution_pts[j].y;
-			float p3_z = revolution_pts[j].x * sin(rotation);
+	// 		float p1_x = revolution_pts[j + 1].x * cos(rotation);
+	// 		float p1_y = origin_y + revolution_pts[j + 1].y;
+	// 		float p1_z = revolution_pts[j + 1].x * sin(rotation);
+
+	// 		float p2_x = revolution_pts[j].x * cos(rotation);
+	// 		float p2_y = origin_y + revolution_pts[j].y;
+	// 		float p2_z = revolution_pts[j].x * sin(rotation);
+
+	// 		if(i != divisions)
+	// 			rotation = (2 * PI * (i + 1))/divisions;
+	// 		else
+	// 			rotation = (2 * PI * (0.0))/divisions;
+
+
+	// 		float p3_x = revolution_pts[j].x * cos(rotation);
+	// 		float p3_y = origin_y + revolution_pts[j].y;
+	// 		float p3_z = revolution_pts[j].x * sin(rotation);
 			
-			float p4_x = revolution_pts[j + 1].x * cos(rotation);
-			float p4_y = origin_y + revolution_pts[j + 1].y;
-			float p4_z = revolution_pts[j + 1].x * sin(rotation);
+	// 		float p4_x = revolution_pts[j + 1].x * cos(rotation);
+	// 		float p4_y = origin_y + revolution_pts[j + 1].y;
+	// 		float p4_z = revolution_pts[j + 1].x * sin(rotation);
 
-			Vec3f T1 = Vec3f(revolution_pts[ j + 2 ].x - revolution_pts[ j + 1 ].x, revolution_pts[ j + 2 ].y - revolution_pts[ j + 1].y, 0.0);
-			Vec3f T2 = Vec3f(0.0, 0.0, 1.0);
-			Vec3f n1 = T1 ^ T2;
-			n1.normalize();
-			n1 = ((2 * PI * i)/divisions) * n1;
+	// 		Vec3f T1 = Vec3f(revolution_pts[ j + 2 ].x - revolution_pts[ j + 1 ].x, revolution_pts[ j + 2 ].y - revolution_pts[ j + 1].y, 0.0);
+	// 		Vec3f T2 = Vec3f(0.0, 0.0, 1.0);
+	// 		Vec3f n1 = T1 ^ T2;
+	// 		n1.normalize();
+	// 		n1 = ((2 * PI * i)/divisions) * n1;
 
-			T1 = Vec3f(revolution_pts[ j + 1 ].x - revolution_pts[j].x, revolution_pts[ j + 1 ].y - revolution_pts[j].y, 0.0);
-			Vec3f n2 = T1 ^ T2;
-			n2.normalize();
-			n2 = ((2 * PI * i)/divisions) * n2;
+	// 		T1 = Vec3f(revolution_pts[ j + 1 ].x - revolution_pts[j].x, revolution_pts[ j + 1 ].y - revolution_pts[j].y, 0.0);
+	// 		Vec3f n2 = T1 ^ T2;
+	// 		n2.normalize();
+	// 		n2 = ((2 * PI * i)/divisions) * n2;
 
-			T1 = Vec3f(revolution_pts[ j + 1 ].x - revolution_pts[j].x, revolution_pts[ j + 1 ].y - revolution_pts[j].y, 0.0);
-			Vec3f n3 = T1 ^ T2;
-			n3.normalize();
+	// 		T1 = Vec3f(revolution_pts[ j + 1 ].x - revolution_pts[j].x, revolution_pts[ j + 1 ].y - revolution_pts[j].y, 0.0);
+	// 		Vec3f n3 = T1 ^ T2;
+	// 		n3.normalize();
 
-			if(i != divisions)
-				n3 = ((2 * PI * (i + 1))/divisions) * n3;
-			else
-				n3 = ((2 * PI * (0.0))/divisions) * n3;
+	// 		if(i != divisions)
+	// 			n3 = ((2 * PI * (i + 1))/divisions) * n3;
+	// 		else
+	// 			n3 = ((2 * PI * (0.0))/divisions) * n3;
 
-			T1 = Vec3f(revolution_pts[j + 2].x - revolution_pts[j + 1].x, revolution_pts[j+2].y - revolution_pts[j + 1].y, 0.0);
-			Vec3f n4 = T1 ^ T2;
-			n4.normalize();
+	// 		T1 = Vec3f(revolution_pts[j + 2].x - revolution_pts[j + 1].x, revolution_pts[j+2].y - revolution_pts[j + 1].y, 0.0);
+	// 		Vec3f n4 = T1 ^ T2;
+	// 		n4.normalize();
 
-			if(i != divisions)
-				n4 = ((2 * PI * (i + 1))/divisions) * n4;
-			else
-				n4 = ((2 * PI * (0.0))/divisions) * n4;
+	// 		if(i != divisions)
+	// 			n4 = ((2 * PI * (i + 1))/divisions) * n4;
+	// 		else
+	// 			n4 = ((2 * PI * (0.0))/divisions) * n4;
 
 
-			float texture1_u = (float)i/divisions;
+	// 		float texture1_u = (float)i/divisions;
 			
 			
-			float nominator = 0;
+	// 		float nominator = 0;
 
-			for(int k = 0; k < j + 1; k++){
+	// 		for(int k = 0; k < j + 1; k++){
 
-				if(k == 0) {
-					nominator += 0;
-				}
+	// 			if(k == 0) {
+	// 				nominator += 0;
+	// 			}
 
-				else {
-					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
+	// 			else {
+	// 				float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
 
-					nominator += distance;
-				}
-			}
+	// 				nominator += distance;
+	// 			}
+	// 		}
 
-			float denominator = 0;
+	// 		float denominator = 0;
 
-			for(int k = 0; k < num_pts - 1; k++){
-				if(k == 0) {
-					denominator += 0;
-				}
-				else {
-					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
+	// 		for(int k = 0; k < num_pts - 1; k++){
+	// 			if(k == 0) {
+	// 				denominator += 0;
+	// 			}
+	// 			else {
+	// 				float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
 
-					denominator += distance;
-				}
-			}
+	// 				denominator += distance;
+	// 			}
+	// 		}
 
-			float texture1_v = nominator/denominator;
+	// 		float texture1_v = nominator/denominator;
 
-			float texture2_u = texture1_u;
+	// 		float texture2_u = texture1_u;
 			
-			nominator = 0;
-			for(int k = 0; k < j; k++){
+	// 		nominator = 0;
+	// 		for(int k = 0; k < j; k++){
 
-				if(k == 0) {
-					nominator = 0;
-				}
+	// 			if(k == 0) {
+	// 				nominator = 0;
+	// 			}
 
-				else {
-					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
+	// 			else {
+	// 				float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
 
-					nominator += distance;
-				}
+	// 				nominator += distance;
+	// 			}
 
-			}
-
-
-			float texture2_v = nominator/denominator;
-
-			float texture3_u = (float)(i + 1)/divisions;
-
-			nominator = 0;
-
-			for(int k = 0; k < j; k++){
-
-				if(k == 0) {
-					nominator = 0;
-				}
-
-				else {
-					float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
-
-					nominator += distance;
-				}
-			}
-
-			float texture3_v = nominator/denominator;
-
-			float texture4_u = texture3_u;
-			float texture4_v = texture1_v;
+	// 		}
 
 
-			const GLfloat vertices[] = {
-			 	p1_x, p1_y, p1_z,    
-			 	p2_x, p2_y, p2_z,
-				p3_x, p3_y, p3_z,
-				p4_x, p4_y, p4_z
-			};
+	// 		float texture2_v = nominator/denominator;
 
-			const GLfloat normals[] = {
-				n1[0], n1[1], n1[2],
-				n2[0], n2[1], n2[2],
-				n3[0], n3[1], n3[2],
-				n4[0], n4[1], n4[2],
-			};
+	// 		float texture3_u = (float)(i + 1)/divisions;
 
-			const GLfloat textures[] = {
-				texture1_u, texture1_v,
-				texture2_u, texture2_v,
-				texture3_u, texture3_v,
-				texture4_u, texture4_v
-			};
+	// 		nominator = 0;
 
-			const GLubyte indices[] = {0, 1, 2, 0, 2, 3};
-			const GLfloat colors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0 };
+	// 		for(int k = 0; k < j; k++){
 
-			glEnableClientState(GL_NORMAL_ARRAY);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glEnableClientState(GL_COLOR_ARRAY);
-			glEnableClientState(GL_VERTEX_ARRAY);
+	// 			if(k == 0) {
+	// 				nominator = 0;
+	// 			}
+
+	// 			else {
+	// 				float distance = sqrt(pow(revolution_pts[k].x - revolution_pts[ k - 1].x, 2) + pow(revolution_pts[k].y - revolution_pts[ k - 1].y, 2));
+
+	// 				nominator += distance;
+	// 			}
+	// 		}
+
+	// 		float texture3_v = nominator/denominator;
+
+	// 		float texture4_u = texture3_u;
+	// 		float texture4_v = texture1_v;
+
+
+	// 		const GLfloat vertices[] = {
+	// 		 	p1_x, p1_y, p1_z,    
+	// 		 	p2_x, p2_y, p2_z,
+	// 			p3_x, p3_y, p3_z,
+	// 			p4_x, p4_y, p4_z
+	// 		};
+
+	// 		const GLfloat normals[] = {
+	// 			n1[0], n1[1], n1[2],
+	// 			n2[0], n2[1], n2[2],
+	// 			n3[0], n3[1], n3[2],
+	// 			n4[0], n4[1], n4[2],
+	// 		};
+
+	// 		const GLfloat textures[] = {
+	// 			texture1_u, texture1_v,
+	// 			texture2_u, texture2_v,
+	// 			texture3_u, texture3_v,
+	// 			texture4_u, texture4_v
+	// 		};
+
+	// 		const GLubyte indices[] = {0, 1, 2, 0, 2, 3};
+	// 		const GLfloat colors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0 };
+
+	// 		glEnableClientState(GL_NORMAL_ARRAY);
+	// 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	// 		glEnableClientState(GL_COLOR_ARRAY);
+	// 		glEnableClientState(GL_VERTEX_ARRAY);
 			
-			glNormalPointer( GL_FLOAT, 0, normals);
-			glTexCoordPointer(2, GL_FLOAT, 0, textures);
-			glColorPointer(3, GL_FLOAT, 0, colors);
-			glVertexPointer(3, GL_FLOAT, 0, vertices);
+	// 		glNormalPointer( GL_FLOAT, 0, normals);
+	// 		glTexCoordPointer(2, GL_FLOAT, 0, textures);
+	// 		glColorPointer(3, GL_FLOAT, 0, colors);
+	// 		glVertexPointer(3, GL_FLOAT, 0, vertices);
 
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
+	// 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
 
-			glDisableClientState(GL_NORMAL_ARRAY);
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDisableClientState(GL_COLOR_ARRAY);
-			glDisableClientState(GL_VERTEX_ARRAY);
+	// 		glDisableClientState(GL_NORMAL_ARRAY);
+	// 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	// 		glDisableClientState(GL_COLOR_ARRAY);
+	// 		glDisableClientState(GL_VERTEX_ARRAY);
 
-			checkers.use();
+	// 		checkers.use();
 
-		}
+	// 	}
 
-	}
-	glBindTexture(GL_TEXTURE_2D, 0);
+	// }
+	// glBindTexture(GL_TEXTURE_2D, 0);
 	
 }
 
@@ -903,60 +909,62 @@ void drawBox( double x, double y, double z )
     }
     else
     {
-        /* remember which matrix mode OpenGL was in. */
-        int savemode;
-        glGetIntegerv( GL_MATRIX_MODE, &savemode );
+    	Cloth* c = new Cloth(Vec3f(0.0), 10.0, 10.0, 3, 3);
+    	c->drawCloth();
+  //       /* remember which matrix mode OpenGL was in. */
+  //       int savemode;
+  //       glGetIntegerv( GL_MATRIX_MODE, &savemode );
         
-        /* switch to the model matrix and scale by x,y,z. */
-        glMatrixMode( GL_MODELVIEW );
+  //       /* switch to the model matrix and scale by x,y,z. */
+  //       glMatrixMode( GL_MODELVIEW );
 
-        glPushMatrix();
-        glScaled( x, y, z );
+  //       glPushMatrix();
+  //       glScaled( x, y, z );
         
-        glBegin( GL_QUADS );
+  //       glBegin( GL_QUADS );
         
-        glNormal3d( 0.0, 0.0, -1.0 );
-        glVertex3d( 0.0, 0.0, 0.0 );
-		glVertex3d( 0.0, 1.0, 0.0 );
-        glVertex3d( 1.0, 1.0, 0.0 );
-		glVertex3d( 1.0, 0.0, 0.0 );
+  //       glNormal3d( 0.0, 0.0, -1.0 );
+  //       glVertex3d( 0.0, 0.0, 0.0 );
+		// glVertex3d( 0.0, 1.0, 0.0 );
+  //       glVertex3d( 1.0, 1.0, 0.0 );
+		// glVertex3d( 1.0, 0.0, 0.0 );
         
-        glNormal3d( 0.0, -1.0, 0.0 );
-        glVertex3d( 0.0, 0.0, 0.0 );
-		glVertex3d( 1.0, 0.0, 0.0 );
-        glVertex3d( 1.0, 0.0, 1.0 );
-		glVertex3d( 0.0, 0.0, 1.0 );
+  //       glNormal3d( 0.0, -1.0, 0.0 );
+  //       glVertex3d( 0.0, 0.0, 0.0 );
+		// glVertex3d( 1.0, 0.0, 0.0 );
+  //       glVertex3d( 1.0, 0.0, 1.0 );
+		// glVertex3d( 0.0, 0.0, 1.0 );
         
-        glNormal3d( -1.0, 0.0, 0.0 );
-        glVertex3d( 0.0, 0.0, 0.0 );
-		glVertex3d( 0.0, 0.0, 1.0 );
-        glVertex3d( 0.0, 1.0, 1.0 );
-		glVertex3d( 0.0, 1.0, 0.0 );
+  //       glNormal3d( -1.0, 0.0, 0.0 );
+  //       glVertex3d( 0.0, 0.0, 0.0 );
+		// glVertex3d( 0.0, 0.0, 1.0 );
+  //       glVertex3d( 0.0, 1.0, 1.0 );
+		// glVertex3d( 0.0, 1.0, 0.0 );
         
-        glNormal3d( 0.0, 0.0, 1.0 );
-        glVertex3d( 0.0, 0.0, 1.0 );
-		glVertex3d( 1.0, 0.0, 1.0 );
-        glVertex3d( 1.0, 1.0, 1.0 );
-		glVertex3d( 0.0, 1.0, 1.0 );
+  //       glNormal3d( 0.0, 0.0, 1.0 );
+  //       glVertex3d( 0.0, 0.0, 1.0 );
+		// glVertex3d( 1.0, 0.0, 1.0 );
+  //       glVertex3d( 1.0, 1.0, 1.0 );
+		// glVertex3d( 0.0, 1.0, 1.0 );
         
-        glNormal3d( 0.0, 1.0, 0.0 );
-        glVertex3d( 0.0, 1.0, 0.0 );
-		glVertex3d( 0.0, 1.0, 1.0 );
-        glVertex3d( 1.0, 1.0, 1.0 );
-		glVertex3d( 1.0, 1.0, 0.0 );
+  //       glNormal3d( 0.0, 1.0, 0.0 );
+  //       glVertex3d( 0.0, 1.0, 0.0 );
+		// glVertex3d( 0.0, 1.0, 1.0 );
+  //       glVertex3d( 1.0, 1.0, 1.0 );
+		// glVertex3d( 1.0, 1.0, 0.0 );
         
-        glNormal3d( 1.0, 0.0, 0.0 );
-        glVertex3d( 1.0, 0.0, 0.0 );
-		glVertex3d( 1.0, 1.0, 0.0 );
-        glVertex3d( 1.0, 1.0, 1.0 );
-		glVertex3d( 1.0, 0.0, 1.0 );
+  //       glNormal3d( 1.0, 0.0, 0.0 );
+  //       glVertex3d( 1.0, 0.0, 0.0 );
+		// glVertex3d( 1.0, 1.0, 0.0 );
+  //       glVertex3d( 1.0, 1.0, 1.0 );
+		// glVertex3d( 1.0, 0.0, 1.0 );
         
-        glEnd();
+  //       glEnd();
         
-        /* restore the model matrix stack, and switch back to the matrix
-        mode we were in. */
-        glPopMatrix();
-        glMatrixMode( savemode );
+  //       /* restore the model matrix stack, and switch back to the matrix
+  //       mode we were in. */
+  //       glPopMatrix();
+  //       glMatrixMode( savemode );
     }
 }
 
